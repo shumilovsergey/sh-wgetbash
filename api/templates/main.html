@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}
+main
+{% endblock %}
+{% block content %}
+
+{% if request.session.auth != True %}
+<div class="flex justify-center items-center h-screen">
+  <form class="" action="{% url 'api:login' %}" method="GET">
+    <button class="text-lg shadow-md text-sky-900 duration-500 border-2 border-sky-500 hover:bg-sky-200 bg-sky-100 h-20 w-48 text-center rounded-3xl" type="submit">telegram login</button>
+  </form>
+</div> 
+{% endif %}
+{% endblock %}

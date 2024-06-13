@@ -1,2 +1,2 @@
-# sh-wgetbash
-sh wget bash 
+# template-django-tailwind
+here is my django tailwind template
