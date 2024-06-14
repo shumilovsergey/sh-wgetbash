@@ -19,6 +19,12 @@ def signin(message, request):
     name = message.chat_id
     text=message.text
     session_id = text.replace("/start ", "")
+    qr_check = False
+
+    if "qrcode" in session_id:
+        session_id = session_id.replace("qrcode", "")
+        qr_check = True
+
     if message.first_name:
         name = message.first_name
     elif message.username:
@@ -43,6 +49,9 @@ def signin(message, request):
         print("")
         return message.sendMessage(text="Что-то пошло не так, попробуйте авторизоваться еще раз!", keyboard=CLEAN_BUTTON)
     
-    return message.sendMessage(text="Вход выполнен успешно!", keyboard=BACK_BUTTON)
+    if qr_check:
+        return message.sendMessage(text="Вход выполнен успешно!")
+    else:
+        return message.sendMessage(text="Вход выполнен успешно!", keyboard=BACK_BUTTON)
 
 
