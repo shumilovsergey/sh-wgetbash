@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% block title %}
-script_create
+wgetbash
 {% endblock %}
 {% block content %}
 {% load static %}
 
-<div class="w-[1000px] bg-sky-50 border-2 border-sky-200 rounded-3xl shadow-md flex flex-col">
+<div class="w-[1000px] bg-sky-50 border-2 border-sky-200 rounded-3xl shadow-md flex flex-col ml-60">
     <form class="m-10" method="post" action="{% url 'api:script_create' %}">
         {% csrf_token %}
         <div class="text-sky-900 mb-1">Название:</div>

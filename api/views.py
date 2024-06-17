@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from server.const import BOT_NAME
 from server.const import BASH_BEGINING
 from server.const import BASH_SPLITER
+from server.const import HOST_DNS
 
 from .models import TelegramUsers
 from .models import Scripts
@@ -71,7 +72,6 @@ class ScriptList(View):
         return render(request, 'script/script_list.html', {"script_list":script_list})
 
 
-    
 class ScriptId(View):
     def get(self, request, script_id):
         if not Scripts.objects.filter(id=script_id).exists():
@@ -79,12 +79,8 @@ class ScriptId(View):
             return render(request, 'info.html', {"info":info})
         
         script = Scripts.objects.get(id=script_id)
+        return render(request, 'script/script_id.html', {'script':script, 'host_dns':HOST_DNS})
 
-        raw_script_name = f"\r\necho \"complited {script.name} \" "
-        raw = BASH_BEGINING + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
-
-
-        return HttpResponse(raw.encode('utf-8'), content_type='text/plain; charset=utf-8')
 
 class ScriptDelete(View):
     def post(self, request, script_id):
@@ -96,3 +92,16 @@ class ScriptDelete(View):
         script.delete()
         return redirect("/script_list/")
     
+class ScriptRaw(View):
+    def get(self, request, script_id):
+        if not Scripts.objects.filter(id=script_id).exists():
+            info = "Скрипт не найден, попробуйте еще раз"
+            return render(request, 'info.html', {"info":info})
+        
+        script = Scripts.objects.get(id=script_id)
+        raw_script_name = f"\r\necho \"complited {script.name} \" "
+        raw = BASH_BEGINING + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
+
+        response = HttpResponse(raw.encode('utf-8'), content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=script_raw.sh'
+        return response

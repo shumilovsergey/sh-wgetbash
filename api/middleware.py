@@ -8,7 +8,7 @@ class CheckSessionMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if "bot" in request.path or "auth_check" in request.path:
+        if "bot" in request.path or "auth_check" in request.path or "script_raw" in request.path:
             print("")
             print("SessionMiddll ignore /bot or /auth")
             print("")
@@ -37,7 +37,7 @@ class SessionDebuger:
         self.get_response = get_response
 
     def __call__(self, request):
-        if "bot" in request.path or "auth_check" in request.path:
+        if "bot" in request.path or "auth_check" in request.path or "script_raw" in request.path:
             print("")
             print("SessionDebbugerMidd ignore /bot in request.path")
             print("")
@@ -47,7 +47,6 @@ class SessionDebuger:
         session_id = request.session["session_id"]
         auth = request.session["auth"]
         name = request.session["name"]
-        org_select = request.session["org_select"]
 
         print("##_______SESSION____##")
         print(f"session_id - {session_id}")
@@ -62,6 +61,7 @@ class SessionDebuger:
             "/login/",
             "/logout/",
             "/auth_check/",
+            "/script_raw/",
         ]
 
         if request.path in path_exceptions or request.session["auth"] or "/admin" in request.path:

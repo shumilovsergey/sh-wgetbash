@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}
+wgetbash
+{% endblock %}
+{% block content %}
+{% load static %}
+
+
+<div class="ml-60 text-sky-900 w-[1000px] bg-sky-100 rounded-3xl border-2 shadow-md border-sky-200">
+    <div class="mb-10 m-10">
+        <div class="text-lg mb-1">Название:</div>
+        <pre class="p-2 h-10 w-[450px] border-sky-100 border-2 rounded-3xl shadow-md bg-white mb-10">{{script.name}}</pre>
+        <div class="text-lg bm-1">Скрипт:</div>
+        <pre class="border-sky-100 border-2 rounded-3xl shadow-md bg-white p-2">{{script.text}}</pre>
+    </div>
+
+    <div class="flex justify-between">
+        <button class="m-10 h-10 w-36 hover:w-40 bg-green-200 text-green-900 rounded-3xl duration-500 border-2 border-green-300 hover:bg-green-300 shadow-md" onclick="copyToClipboard()">wgetbash</button>
+
+        <form action="{% url 'api:script_delete' script_id=script.id %}" method="POST">
+            {% csrf_token %}
+            <button class="m-10 h-10 w-36 hover:w-40 bg-rose-200 text-rose-900 rounded-3xl duration-500 border-2 border-rose-300 hover:bg-rose-300 shadow-md">удалить</button>
+        </form>  
+    </div>
+        
+</div>
+
+<script>
+    function copyToClipboard() {
+        const textToCopy = "wget https://{{host_dns}}/script_raw/{{script.id}}/ -O script_{{script.id}}.sh && chmod +x script_{{script.id}}.sh && sh script_{{script.id}}.sh";
+    
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+    
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    
+        alert('wget bash команда для скрипта скопирована');
+    }
+    </script>
+
+
+
+
+
+{% endblock %}

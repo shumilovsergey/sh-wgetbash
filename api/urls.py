@@ -9,6 +9,7 @@ from .views import ScriptList
 from .views import ScriptId
 from .views import ScriptDelete
 from .views import ScriptCreate
+from .views import ScriptRaw
 
 app_name = 'api'
 urlpatterns = [
@@ -22,6 +23,7 @@ urlpatterns = [
     path('script_id/<int:script_id>/', ScriptId.as_view(), name='script_id'),
     path('script_delete/<int:script_id>/', ScriptDelete.as_view(), name='script_delete'),     # script_delete (no delete script in template)
     path('script_create/', ScriptCreate.as_view(), name='script_create'),
+    path('script_raw/<int:script_id>/', ScriptRaw.as_view(), name='script_raw'),
     # template
 
     # template_list
