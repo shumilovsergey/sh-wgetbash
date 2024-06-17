@@ -12,10 +12,22 @@
 </head>
 <body class="">
     {% if request.session.auth %}
-    <div class="bg-sky-100 shadow-md flex pl-10 items-center justify-between">
+    <div class="bg-sky-100 shadow-md flex items-center justify-between">
         <div class="flex">
+            <form action="" method="GET">
+                <button class="bg-sky-200 h-10 w-10 items-center flex justify-center duration-500 text-lg text-sky-900 hover:bg-sky-600 hover:text-sky-50">?</button>
+            </form>
+
             <form action="{% url 'api:main' %}" method="GET">
                 <button class="hover:bg-sky-200 h-10 w-40 items-center flex justify-center duration-500 text-lg text-sky-900">{{request.session.name}}</button>
+            </form>
+
+            <form action="{% url 'api:script_list' %}" method="GET">
+                {%if "script" in request.path  %}
+                <button class="bg-sky-200 h-10 w-40 items-center flex justify-center text-lg text-sky-900">Скрипты</button>
+                {% else %}
+                <button class="hover:bg-sky-200 h-10 w-40 items-center flex justify-center duration-500 text-lg text-sky-900">Скрипты</button>
+                {% endif %}
             </form>
         </div>
 
@@ -26,7 +38,7 @@
 
     {% endif %}
 
-    <div class="px-10 mt-32">
+    <div class="px-10 mt-32 ml-60">
     {% block content %}{% endblock %}
     </div>
 

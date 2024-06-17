@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+script_list
+{% endblock %}
+{% block content %}
+{% load static %}
+
+<div class="text-lg text-sky-900">
+    <form action="{% url 'api:script_create' %}" method="GET">
+        <button class="mb-10 text-2xl shadow-md w-10 duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 text-center rounded-3xl hover:w-12">+</button>
+    </form>
+
+    <div class="pb-3 w-40 items-center">Ваши скрипты:</div>
+    {% for script in script_list %}
+    <div class="flex gap-1">
+        <form action="{% url 'api:script_id' script_id=script.id %}" method="GET">
+            <button class="mb-2 shadow-md w-[450px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl">{{script.name}}</button>
+        </form>   
+        <form action="{% url 'api:script_delete' script_id=script.id %}" method="POST">
+            {% csrf_token %}
+            <button class="h-10 w-10 bg-rose-200 text-rose-900 rounded-3xl duration-500 border-2 border-rose-300 hover:bg-rose-300 shadow-md hover:w-12">Х</button>
+        </form>  
+    </div>
+
+    {% endfor %}
+</div>
+
+{% endblock %}
