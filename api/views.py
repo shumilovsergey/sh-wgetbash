@@ -71,7 +71,6 @@ class ScriptList(View):
         script_list = Scripts.objects.filter(author=tg_id)
         return render(request, 'script/script_list.html', {"script_list":script_list})
 
-
 class ScriptId(View):
     def get(self, request, script_id):
         if not Scripts.objects.filter(id=script_id).exists():
@@ -81,14 +80,20 @@ class ScriptId(View):
         script = Scripts.objects.get(id=script_id)
         return render(request, 'script/script_id.html', {'script':script, 'host_dns':HOST_DNS})
 
-
-class ScriptDelete(View):
+class ScriptDelete(View):   # надо дописать - запрет удаления скриптов которые используются в темплейтах
     def post(self, request, script_id):
         if not Scripts.objects.filter(id=script_id).exists():
             info = "Скрипт не найден, попробуйте еще раз"
             return render(request, 'info.html', {"info":info})
         
+        session_id = request.session["session_id"]  
+        user = TelegramUsers.objects.get(session_id=session_id)
         script = Scripts.objects.get(id=script_id)
+
+        if user.tg_id != script.author:
+            info = "У вас нет прав на удаление"
+            return render(request, 'info.html', {"info":info})
+        
         script.delete()
         return redirect("/script_list/")
     
@@ -105,3 +110,53 @@ class ScriptRaw(View):
         response = HttpResponse(raw.encode('utf-8'), content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=script_raw.sh'
         return response
+    
+# template
+
+class TemplateCreate(View):
+    def get(self, request):    # form
+        return
+    
+    def post(self, request):   # save
+        return
+    
+class TemplateList(View):
+    def get(self, request):
+        return
+
+class TemplateId(View):
+    def get(self, request, template_id):    # inspekt
+        return
+    
+    def post(self, request, template_id):   # edit
+        return 
+    
+class TemplateDelete(View):
+    def post(self, request, template_id):
+        return
+    
+class TemplateRaw(View):
+    def get(self, request):
+        return
+    
+
+
+# TESTING
+import json
+from django.views.decorators.csrf import csrf_exempt
+
+def order_page(request):
+    menu_items = ["Pizza", "Burger", "Pasta", "Salad", "Sushi"]
+    return render(request, 'testing/order_page.html', {'menu_items': menu_items})
+
+@csrf_exempt
+def submit_order(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        order = data.get('order', [])
+        comment = data.get('comment', '')
+
+        print("Order received:", comment)
+        print("Order received:", order)  # For now, just print the order
+        return JsonResponse({"status": "success", "order": order})
+    return JsonResponse({"status": "error"}, status=400)
