@@ -2,6 +2,8 @@ from django.views import View
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse
+import json
+from django.views.decorators.csrf import csrf_exempt
 
 from server.const import BOT_NAME
 from server.const import BASH_BEGINING
@@ -69,7 +71,7 @@ class ScriptList(View):
         user = TelegramUsers.objects.get(session_id=session_id)
         tg_id = user.tg_id
         script_list = Scripts.objects.filter(author=tg_id)
-        return render(request, 'script/script_list.html', {"script_list":script_list})
+        return render(request, 'script/script_list.html', {"script_list":script_list, 'host_dns':HOST_DNS})
 
 class ScriptId(View):
     def get(self, request, script_id):
@@ -79,8 +81,27 @@ class ScriptId(View):
         
         script = Scripts.objects.get(id=script_id)
         return render(request, 'script/script_id.html', {'script':script, 'host_dns':HOST_DNS})
+    
+    def post(self, request, script_id):
+        if not Scripts.objects.filter(id=script_id).exists():
+            info = "Скрипт не найден, попробуйте еще раз"
+            return render(request, 'info.html', {"info":info})
+        
+        script = Scripts.objects.get(id=script_id)   
+        session_id = request.session["session_id"]  
+        user = TelegramUsers.objects.get(session_id=session_id)
 
-class ScriptDelete(View):   # надо дописать - запрет удаления скриптов которые используются в темплейтах
+        if user.tg_id != script.author:
+            info = "У вас нет прав на запись"
+            return render(request, 'info.html', {"info":info})
+
+        script.name = request.POST["name"]
+        script.text = request.POST["text"]
+        script.save()
+        return redirect("/script_list/")
+
+
+class ScriptDelete(View):   # дописать предупреждение о том, что скрипт учавствует в темплейте
     def post(self, request, script_id):
         if not Scripts.objects.filter(id=script_id).exists():
             info = "Скрипт не найден, попробуйте еще раз"
@@ -96,7 +117,7 @@ class ScriptDelete(View):   # надо дописать - запрет удал�
         
         script.delete()
         return redirect("/script_list/")
-    
+        
 class ScriptRaw(View):
     def get(self, request, script_id):
         if not Scripts.objects.filter(id=script_id).exists():
@@ -115,14 +136,35 @@ class ScriptRaw(View):
 
 class TemplateCreate(View):
     def get(self, request):    # form
-        return
+        session_id = request.session["session_id"]        
+        user = TelegramUsers.objects.get(session_id=session_id)
+        tg_id = user.tg_id
+        script_list = Scripts.objects.filter(author=tg_id)
+        return render(request, 'template/template_create.html', {'script_list': script_list})
     
     def post(self, request):   # save
-        return
+        data = json.loads(request.body)
+        script_list_id = data.get('script_list')
+        template_name = data.get('template_name')
+
+        # for script_id in script_list_id:
+        #     if Scripts.objects.filter(id=script_id).exists():
+        #         script = Scripts.objects.get(id=script_id)
+
+        #     else:
+        #         script = f"# ошибка добавления скрипта под id {script_id}"
+
+
+        return JsonResponse({"status": "success"})
+
     
 class TemplateList(View):
     def get(self, request):
-        return
+        session_id = request.session["session_id"]        
+        user = TelegramUsers.objects.get(session_id=session_id)
+        tg_id = user.tg_id
+        template_list = Templates.objects.filter(author=tg_id)
+        return render(request, 'template/template_list.html', {"script_list":template_list})
 
 class TemplateId(View):
     def get(self, request, template_id):    # inspekt
@@ -139,24 +181,3 @@ class TemplateRaw(View):
     def get(self, request):
         return
     
-
-
-# TESTING
-import json
-from django.views.decorators.csrf import csrf_exempt
-
-def order_page(request):
-    menu_items = ["Pizza", "Burger", "Pasta", "Salad", "Sushi"]
-    return render(request, 'testing/order_page.html', {'menu_items': menu_items})
-
-@csrf_exempt
-def submit_order(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        order = data.get('order', [])
-        comment = data.get('comment', '')
-
-        print("Order received:", comment)
-        print("Order received:", order)  # For now, just print the order
-        return JsonResponse({"status": "success", "order": order})
-    return JsonResponse({"status": "error"}, status=400)

@@ -6,20 +6,32 @@ wgetbash
 {% load static %}
 
 
-<div class="ml-60 text-sky-900 w-[1000px] bg-sky-100 rounded-3xl border-2 shadow-md border-sky-200">
-    <div class="mb-10 m-10">
-        <div class="text-lg mb-1">Название:</div>
-        <pre class="p-2 h-10 w-[450px] border-sky-100 border-2 rounded-3xl shadow-md bg-white mb-10">{{script.name}}</pre>
-        <div class="text-lg bm-1">Скрипт:</div>
-        <pre class="border-sky-100 border-2 rounded-3xl shadow-md bg-white p-2">{{script.text}}</pre>
+
+<div class="w-[1000px] bg-sky-100 border-2 border-sky-200 rounded-3xl shadow-md flex flex-col ml-60 text-sky-900">
+    <div>
+        <form class="m-10" method="post" action="{% url 'api:script_id' script_id=script.id %}">
+            {% csrf_token %}
+            
+            <div class="text-sky-900 mb-1">Название:</div>
+            
+            <div class="mb-10 flex justify-between">
+                <input required type="text" value="{{script.name}}" autocomplete="off" name="name" maxlength="56" class="text-sky-900 h-10 w-[450px] border-sky-100 border-2 rounded-3xl shadow-md focus:outline-none focus:ring-slate-200 focus:border-sky-200" maxlength="56">
+                <button type="submit"  class="hover:bg-sky-200 h-10 w-36 hover:w-40 items-center flex justify-center duration-500 text-lg border-sky-200 text-sky-900 border-2 rounded-3xl shadow-md">сохранить</button>
+            </div>
+    
+            <div class="text-sky-900 mb-1">Cкрипт:</div>
+            <div class="mb-10">
+                <textarea autocomplete="off" required class="text-sky-900 w-full border-sky-100 border-2 rounded-3xl shadow-md focus:outline-none focus:ring-slate-200 focus:border-sky-200" name="text" rows="16">{{script.text}}</textarea>
+            </div>
+        </form>
     </div>
 
-    <div class="flex justify-between">
-        <button class="m-10 h-10 w-36 hover:w-40 bg-green-200 text-green-900 rounded-3xl duration-500 border-2 border-green-300 hover:bg-green-300 shadow-md" onclick="copyToClipboard()">wgetbash</button>
+    <div class="flex justify-between mb-10 ml-10 mr-10">
+        <button class="h-10 w-36 hover:w-40 bg-green-200 text-green-900 rounded-3xl duration-500 border-2 border-green-300 hover:bg-green-300 shadow-md" onclick="copyToClipboard()">wgetbash</button>
 
         <form action="{% url 'api:script_delete' script_id=script.id %}" method="POST">
             {% csrf_token %}
-            <button class="m-10 h-10 w-36 hover:w-40 bg-rose-200 text-rose-900 rounded-3xl duration-500 border-2 border-rose-300 hover:bg-rose-300 shadow-md">удалить</button>
+            <button class="h-10 w-36 hover:w-40 bg-rose-200 text-rose-900 rounded-3xl duration-500 border-2 border-rose-300 hover:bg-rose-300 shadow-md">удалить</button>
         </form>  
     </div>
         
@@ -39,7 +51,7 @@ wgetbash
     
         alert('wget bash команда для скрипта скопирована');
     }
-    </script>
+</script>
 
 
 

@@ -30,7 +30,7 @@ urlpatterns = [
     # script
     path('script_list/', ScriptList.as_view(), name='script_list'),
     path('script_id/<int:script_id>/', ScriptId.as_view(), name='script_id'),
-    path('script_delete/<int:script_id>/', ScriptDelete.as_view(), name='script_delete'),     # script_delete (no delete script in template)
+    path('script_delete/<int:script_id>/', ScriptDelete.as_view(), name='script_delete'),     # script_delete warning
     path('script_create/', ScriptCreate.as_view(), name='script_create'),
     path('script_raw/<int:script_id>/', ScriptRaw.as_view(), name='script_raw'),
     # template
@@ -40,6 +40,6 @@ urlpatterns = [
     path('template_create/', TemplateCreate.as_view(), name='template_create'),
     path('template_raw/<int:script_id>/', TemplateRaw.as_view(), name='template_raw'),
     # testing
-    path('order/', views.order_page, name='order_page'),
-    path('submit_order/', views.submit_order, name='submit_order'),
+    # path('order/', views.order_page, name='order_page'),
+    # path('submit_order/', views.submit_order, name='submit_order'),
 ]

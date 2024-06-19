@@ -9,6 +9,12 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="icon" type="image/svg+xml" href="{% static 'icon.png' %}">
 {% tailwind_css %}
+    <style>
+        /* Custom style to control transition timing */
+        .transition-opacity {
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
 </head>
 <body class="">
     {% if request.session.auth %}
@@ -27,6 +33,14 @@
                 <button class="bg-sky-200 h-10 w-40 items-center flex justify-center text-lg text-sky-900">Скрипты</button>
                 {% else %}
                 <button class="hover:bg-sky-200 h-10 w-40 items-center flex justify-center duration-500 text-lg text-sky-900">Скрипты</button>
+                {% endif %}
+            </form>
+
+            <form action="{% url 'api:template_lis' %}" method="GET">
+                {%if "template" in request.path  %}
+                <button class="bg-sky-200 h-10 w-40 items-center flex justify-center text-lg text-sky-900">Шаблоны</button>
+                {% else %}
+                <button class="hover:bg-sky-200 h-10 w-40 items-center flex justify-center duration-500 text-lg text-sky-900">Шаблоны</button>
                 {% endif %}
             </form>
         </div>

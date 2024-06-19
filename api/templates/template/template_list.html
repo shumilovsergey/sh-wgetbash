@@ -5,6 +5,21 @@ wgetbash
 {% block content %}
 {% load static %}
 
+<div class="text-lg text-sky-900 ml-60">
+    <form action="{% url 'api:template_create' %}" method="GET">
+        <button class="mb-3 text-2xl shadow-md w-10 duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 text-center rounded-3xl hover:w-12">+</button>
+    </form>
+
+    <div class="pb-3 w-40 items-center">Ваши шаблоны:</div>
+    {% for template in template_list %}
+    <div class="flex gap-1">
+        <form action="{% url 'api:script_id' script_id=script.id %}" method="GET">
+            <button class="mb-2 shadow-md w-[450px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl">{{template.name}}</button>
+        </form>
+    </div>
+
+    {% endfor %}
+</div>
 
 
 
