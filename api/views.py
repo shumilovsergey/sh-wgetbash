@@ -147,14 +147,15 @@ class TemplateCreate(View):
         script_list_id = data.get('script_list')
         template_name = data.get('template_name')
 
-        # for script_id in script_list_id:
-        #     if Scripts.objects.filter(id=script_id).exists():
-        #         script = Scripts.objects.get(id=script_id)
+        session_id = request.session["session_id"]   
+        user = TelegramUsers.objects.get(session_id=session_id) 
+        template = Templates.objects.create(name=template_name, author=user)
 
-        #     else:
-        #         script = f"# ошибка добавления скрипта под id {script_id}"
-
-
+        for script_id in script_list_id:
+            if Scripts.objects.filter(id=script_id).exists():
+                script = Scripts.objects.get(id=script_id)
+                template.scripts.add(script)
+        template.save()
         return JsonResponse({"status": "success"})
 
     
@@ -162,16 +163,18 @@ class TemplateList(View):
     def get(self, request):
         session_id = request.session["session_id"]        
         user = TelegramUsers.objects.get(session_id=session_id)
-        tg_id = user.tg_id
-        template_list = Templates.objects.filter(author=tg_id)
-        return render(request, 'template/template_list.html', {"script_list":template_list})
+        template_list = Templates.objects.filter(author=user)
+        print(template_list)
+        return render(request, 'template/template_list.html', {"template_list":template_list})
 
 class TemplateId(View):
     def get(self, request, template_id):    # inspekt
-        return
-    
-    def post(self, request, template_id):   # edit
-        return 
+        if not Templates.objects.filter(id=template_id).exists():
+            info = "Шаблон не найден, попробуйте еще раз"
+            return render(request, "info.html", {"info":info})
+        
+        template = Templates.objects.get(id=template_id)
+        return render(request, 'template/template_id.html', {"template":template})
     
 class TemplateDelete(View):
     def post(self, request, template_id):

@@ -35,11 +35,9 @@ urlpatterns = [
     path('script_raw/<int:script_id>/', ScriptRaw.as_view(), name='script_raw'),
     # template
     path('template_list/', TemplateList.as_view(), name='template_lis'),
-    path('template_id/<int:script_id>/', TemplateId.as_view(), name='template_id'),
-    path('template_delete/<int:script_id>/', TemplateDelete.as_view(), name='template_delete'),
+    path('template_id/<int:template_id>/', TemplateId.as_view(), name='template_id'),
+    path('template_delete/<int:template_id>/', TemplateDelete.as_view(), name='template_delete'),
     path('template_create/', TemplateCreate.as_view(), name='template_create'),
-    path('template_raw/<int:script_id>/', TemplateRaw.as_view(), name='template_raw'),
+    path('template_raw/<int:template_id>/', TemplateRaw.as_view(), name='template_raw'),
     # testing
-    # path('order/', views.order_page, name='order_page'),
-    # path('submit_order/', views.submit_order, name='submit_order'),
 ]

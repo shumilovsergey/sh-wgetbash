@@ -16,18 +16,18 @@ wgetbash
 
     <div class="m-10 flex justify-evenly">
         <div class="menu">
-            <div>Доступные скрипты:</div>
+            <div class="text-sky-900">Доступные скрипты:</div>
             <div id="menu-items" class="w-[300px]">
             {% for script in script_list %}
                 <div>
-                    <button class="menu-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl" value="{{script.id}}" onclick="moveToOrder(this)">{{script.name}}</button>
+                    <button class="text-sky-900 menu-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl" value="{{script.id}}" onclick="moveToOrder(this)">{{script.name}}</button>
                 </div>
             {% endfor %}
             </div>
         </div>
 
         <div class="order">
-            <div>Шаблон:</div>
+            <div class="text-sky-900">Шаблон:</div>
             <div id="order-items" class="w-[300px]"></div>
         </div>
     </div>
@@ -37,7 +37,7 @@ wgetbash
     function moveToOrder(menuItem) {
         const orderContainer = document.getElementById('order-items');
         const orderItem = document.createElement('button');
-        orderItem.className = 'order-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl';
+        orderItem.className = 'order-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl text-sky-900';
         orderItem.textContent = menuItem.textContent;
         orderItem.value = menuItem.value;
         orderItem.onclick = () => moveToMenu(orderItem);
@@ -48,7 +48,7 @@ wgetbash
     function moveToMenu(orderItem) {
         const menuContainer = document.getElementById('menu-items');
         const menuItem = document.createElement('button');
-        menuItem.className = 'menu-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl';
+        menuItem.className = 'menu-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl text-sky-900';
         menuItem.textContent = orderItem.textContent;
         menuItem.value = orderItem.value;
         menuItem.onclick = () => moveToOrder(menuItem);
@@ -72,11 +72,19 @@ wgetbash
                 body: JSON.stringify({ script_list: scriptList, template_name: templateName})
             })
             .then(response => response.json())
-            .then(window.location.href = '/template_list/')
+            .then(data => {
+                sleep(0).then(() => {
+                    window.location.href = '/template_list/';
+                });
+            });
         } else {
             console.log('Conditions not met');
         }
     };
+
+    function sleep(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     function getCookie(name) {
         let cookieValue = null;
