@@ -30,17 +30,32 @@ wgetbash
             </div>
         </div>
         
-        <div class="flex justify-between mt-10">
-            <div></div>
-
-            <form action="{% url 'api:template_raw' template_id=template.id %}">
-                <button id="order-btn" class="hover:bg-sky-200 h-10 w-36 hover:w-40 items-center flex justify-center duration-500 text-lg border-sky-200 text-sky-900 border-2 rounded-3xl shadow-md">удалить</button>
-            </form>
+        <div class="flex justify-between gap-1 mt-10">
+            <button class="h-10 w-36 hover:w-40 bg-green-200 text-green-900 rounded-3xl duration-500 border-2 border-green-300 hover:bg-green-300 shadow-md" onclick="copyToClipboard()">wgetbash</button>
+    
+            <form action="{% url 'api:template_delete' template_id=template.id %}" method="POST">
+                {% csrf_token %}
+                <button class="h-10 w-36 hover:w-40 bg-rose-200 text-rose-900 rounded-3xl duration-500 border-2 border-rose-300 hover:bg-rose-300 shadow-md">удалить</button>
+            </form>  
         </div>
 
     </div>
 </div>
 
-
+<script>
+    function copyToClipboard() {
+        const textToCopy = "wget https://{{host_dns}}/template_raw/{{template.id}}/ -O template_{{template.id}}.sh && template +x template_{{template.id}}.sh && sh template_{{template.id}}.sh";
+    
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+    
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+    
+        alert('wget bash команда для скрипта скопирована');
+    }
+</script>
 
 {% endblock %}

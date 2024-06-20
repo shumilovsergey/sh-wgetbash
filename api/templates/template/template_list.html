@@ -9,18 +9,55 @@ wgetbash
     <form action="{% url 'api:template_create' %}" method="GET">
         <button class="mb-3 text-2xl shadow-md w-10 duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 text-center rounded-3xl hover:w-12">+</button>
     </form>
-
-    <div class="pb-3 w-40 items-center">Ваши шаблоны:</div>
+   
+    <div class="flex justify-between w-[530px]">
+        <div class="pb-3 w-40 items-center">Ваши шаблоны:</div>
+        <div id="alert" class="transition-opacity opacity-0 hidden text-sky-900 text-opacity-25">wget bash скопирован</div>
+    </div>
+    
     {% for template in template_list %}
     <div class="flex gap-1">
         <form action="{% url 'api:template_id' template_id=template.id %}" method="GET">
             <button class="mb-2 shadow-md w-[450px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl">{{template.name}}</button>
         </form>
+        <div>
+            <button id="{{template.id}}" class="h-10 w-20 hover:w-24 bg-green-200 text-green-900 rounded-3xl duration-500 border-2 border-green-300 hover:bg-green-300 shadow-md" onclick="copyToClipboard(this.id)">wget</button>
+        </div>
     </div>
 
     {% endfor %}
 </div>
 
+<script>
+    function copyToClipboard(template_id) {
+        const textToCopy = "wget https://{{host_dns}}/template_raw/" + template_id + "/ -O template_"+template_id+".sh && chmod +x template_"+template_id+".sh && sh template_"+template_id+".sh";
+        
+        const alertBox = document.getElementById('alert');
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        document.body.appendChild(textarea);
+    
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
 
+        alertBox.classList.remove('hidden');
+
+        setTimeout(function() {
+            alertBox.classList.remove("opacity-0"); 
+            alertBox.classList.add("opacity-300");
+        }, 10);
+
+        setTimeout(function() {
+            alertBox.classList.remove("opacity-300");
+            alertBox.classList.add("opacity-0");
+        }, 2000);
+
+        setTimeout(function() {
+            alertBox.classList.add("hidden");
+        }, 2500);
+
+    }
+</script>
 
 {% endblock %}

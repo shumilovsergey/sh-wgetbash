@@ -164,8 +164,14 @@ class TemplateList(View):
         session_id = request.session["session_id"]        
         user = TelegramUsers.objects.get(session_id=session_id)
         template_list = Templates.objects.filter(author=user)
-        print(template_list)
-        return render(request, 'template/template_list.html', {"template_list":template_list})
+        template_list_clean = []
+
+        for template in template_list:
+            if template.scripts.count() < 1:
+                template.delete()
+            else:
+                template_list_clean.append(template)
+        return render(request, 'template/template_list.html', {"template_list":template_list_clean})
 
 class TemplateId(View):
     def get(self, request, template_id):    # inspekt
@@ -174,11 +180,24 @@ class TemplateId(View):
             return render(request, "info.html", {"info":info})
         
         template = Templates.objects.get(id=template_id)
-        return render(request, 'template/template_id.html', {"template":template})
+        return render(request, 'template/template_id.html', {"template":template, "host_dns":HOST_DNS})
     
 class TemplateDelete(View):
     def post(self, request, template_id):
-        return
+        if not Templates.objects.filter(id=template_id).exists():
+            info = "Шаблон не найден, попробуйте еще раз"
+            return render(request, 'info.html', {"info":info})
+        
+        session_id = request.session["session_id"]  
+        user = TelegramUsers.objects.get(session_id=session_id)
+        template = Templates.objects.get(id=template_id)
+
+        if user != template.author:
+            info = "У вас нет прав на удаление"
+            return render(request, 'info.html', {"info":info})
+        
+        template.delete()
+        return redirect("/template_list/")
     
 class TemplateRaw(View):
     def get(self, request):
