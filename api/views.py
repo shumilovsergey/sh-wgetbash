@@ -13,6 +13,7 @@ from server.const import HOST_DNS
 from .models import TelegramUsers
 from .models import Scripts
 from .models import Templates
+from .models import MainPage
 
 
 class Main(View):
@@ -20,7 +21,10 @@ class Main(View):
         bot_name = BOT_NAME
         session_id = request.session["session_id"]
         auth = request.session["auth"]
-        return render(request, 'main.html', {"bot_name":bot_name, "session_id":session_id, "auth":auth})
+        data = MainPage.objects.all()
+        data = data[0]
+        
+        return render(request, 'main.html', {"bot_name":bot_name, "session_id":session_id, "auth":auth, "data":data})
     
 class Login(View):
     def get(self, request):
@@ -44,7 +48,7 @@ class Logout(View):
             user.session_id = "None"
             user.save()
 
-        request.session["session_id"]=None
+        request.session["session_id"]="logout"
         request.session["auth"]=None
         request.session["name"]=None
         return redirect("/")
@@ -126,7 +130,7 @@ class ScriptRaw(View):
         
         script = Scripts.objects.get(id=script_id)
         raw_script_name = f"\r\necho \"complited {script.name} \" "
-        raw = BASH_BEGINING + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
+        raw = BASH_BEGINING + "\n" + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
 
         response = HttpResponse(raw.encode('utf-8'), content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=script_raw.sh'
@@ -171,7 +175,7 @@ class TemplateList(View):
                 template.delete()
             else:
                 template_list_clean.append(template)
-        return render(request, 'template/template_list.html', {"template_list":template_list_clean})
+        return render(request, 'template/template_list.html', {"template_list":template_list_clean, "host_dns":HOST_DNS})
 
 class TemplateId(View):
     def get(self, request, template_id):    # inspekt
@@ -200,6 +204,20 @@ class TemplateDelete(View):
         return redirect("/template_list/")
     
 class TemplateRaw(View):
-    def get(self, request):
-        return
+    def get(self, request, template_id):
+        if not Templates.objects.filter(id=template_id).exists():
+            info = "Шаблон не найден, попробуйте еще раз"
+            return render(request, 'info.html', {"info":info})
+        
+        template = Templates.objects.get(id=template_id) 
+        template_raw = BASH_BEGINING
+
+        for script in template.scripts.all():
+            raw_script_name = f"\r\necho \"complited {script.name} \" "
+            raw_script_text = "\n" + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
+            template_raw = template_raw + raw_script_text
+
+        response = HttpResponse(template_raw.encode('utf-8'), content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename=template_raw.sh'
+        return response
     

@@ -5,7 +5,7 @@ wgetbash
 {% block content %}
 
 {% if request.session.auth != True %}
-<div class="flex justify-center items-center h-screen">
+<div class="flex justify-around text-sky-900 text-lg pt-48">
   <div class="">
     <form class="" action="{% url 'api:login' %}" method="GET">
       <button class="text-lg shadow-md w-[256px] text-sky-900 duration-500 border-2 border-sky-500 hover:bg-sky-200 bg-sky-100 h-20 text-center rounded-3xl" type="submit">telegram login</button>
@@ -20,6 +20,17 @@ wgetbash
       <button class="text-lg shadow-md w-[256px] text-sky-900 duration-500 border-2 border-sky-500 hover:bg-sky-200 bg-sky-100 h-20 text-center rounded-3xl" type="submit">обновить qr code</button>
     </form>
 
+  </div>
+
+  <div class="video-container">
+    <iframe 
+        src="https://www.youtube.com/embed/{{data.youtube_id}}" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen
+        class="w-[600px] h-[400px]"
+        >
+    </iframe>
   </div>
 </div> 
 
@@ -69,6 +80,27 @@ if ("{{auth}}" != true) {
 }
 
 </script>
+{% else %}
+
+<div class="flex justify-around text-sky-900 text-lg">
+  <div>
+    <pre class="pb-3">{{data.title}}</pre>
+    <pre class="">{{data.text}}</pre>
+  </div>
+
+  <div class="video-container">
+    <iframe 
+        src="https://www.youtube.com/embed/{{data.youtube_id}}" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        allowfullscreen
+        class="w-[600px] h-[400px]"
+        >
+    </iframe>
+  </div>
+</div>
+
+
 
 {% endif %}
 {% endblock %}

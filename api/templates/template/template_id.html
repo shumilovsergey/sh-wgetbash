@@ -10,9 +10,6 @@ wgetbash
         <div class="text-sky-900 mb-1">Название шаблона:</div>
         <div class="comment flex justify-between">
             <div class="text-sky-900 p-1 pl-4 h-10 w-[450px] border-sky-100 border-2 rounded-3xl shadow-md focus:outline-none focus:ring-slate-200 focus:border-sky-200 bg-white">{{template.name}}</div>
-            <form action="{% url 'api:template_raw' template_id=template.id %}">
-                <button id="order-btn" class="hover:bg-sky-200 h-10 w-36 hover:w-40 items-center flex justify-center duration-500 text-lg border-sky-200 text-sky-900 border-2 rounded-3xl shadow-md"></button>
-            </form>
         </div>
     </div>
 

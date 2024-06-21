@@ -8,7 +8,7 @@ class CheckSessionMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if "bot" in request.path or "auth_check" in request.path or "script_raw" in request.path:
+        if "bot" in request.path or "auth_check" in request.path or "script_raw" in request.path or "template_raw" in request.path:
             print("")
             print("SessionMiddll ignore /bot or /auth")
             print("")
@@ -37,7 +37,7 @@ class SessionDebuger:
         self.get_response = get_response
 
     def __call__(self, request):
-        if "bot" in request.path or "auth_check" in request.path or "script_raw" in request.path:
+        if "bot" in request.path or "auth_check"  in request.path or "script_raw" in request.path or "template_raw" in request.path:
             print("")
             print("SessionDebbugerMidd ignore /bot in request.path")
             print("")
