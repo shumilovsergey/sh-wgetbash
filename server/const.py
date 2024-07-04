@@ -9,8 +9,8 @@ HOST_DNS = os.getenv("HOST_DNS")
 BOT_NAME = os.getenv("BOT_NAME")
 #HARDCODE
 
-BASH_BEGINING = "#!/bin/bash\r\n"
-BASH_SPLITER = "\r\necho \"----------------------------------------------------------------\""
+BASH_BEGINING = "#!/bin/bash\n"
+BASH_SPLITER = "\necho \"----------------------------------------------------------------\""
 
 #BUTTONS
 

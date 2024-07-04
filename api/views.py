@@ -129,7 +129,7 @@ class ScriptRaw(View):
             return render(request, 'info.html', {"info":info})
         
         script = Scripts.objects.get(id=script_id)
-        raw_script_name = f"\r\necho \"complited {script.name} \" "
+        raw_script_name = f"\necho \"complited {script.name} \" "
         raw = BASH_BEGINING + "\n" + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
 
         response = HttpResponse(raw.encode('utf-8'), content_type='text/plain')
@@ -213,7 +213,7 @@ class TemplateRaw(View):
         template_raw = BASH_BEGINING
 
         for script in template.scripts.all():
-            raw_script_name = f"\r\necho \"complited {script.name} \" "
+            raw_script_name = f"\necho \"complited {script.name} \" "
             raw_script_text = "\n" + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
             template_raw = template_raw + raw_script_text
 
