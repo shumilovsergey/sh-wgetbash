@@ -30,7 +30,7 @@ wgetbash
 
 <script>
     function copyToClipboard(template_id) {
-        const textToCopy = "wget https://{{host_dns}}/template_raw/" + template_id + "/ -O template_"+template_id+".sh && chmod +x template_"+template_id+".sh && sh template_"+template_id+".sh";
+        const textToCopy = "wget https://{{host_dns}}/template_raw/" + template_id + "/ -O template_"+template_id+".sh && sed -i 's/\r$//' template_"+template_id+".sh && chmod +x template_"+template_id+".sh && sh template_"+template_id+".sh";
         
         const alertBox = document.getElementById('alert');
         const textarea = document.createElement('textarea');

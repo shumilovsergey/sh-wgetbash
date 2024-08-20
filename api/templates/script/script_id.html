@@ -39,7 +39,7 @@ wgetbash
 
 <script>
     function copyToClipboard() {
-        const textToCopy = "wget https://{{host_dns}}/script_raw/{{script.id}}/ -O script_{{script.id}}.sh && chmod +x script_{{script.id}}.sh && sh script_{{script.id}}.sh";
+        const textToCopy = "wget https://{{host_dns}}/script_raw/{{script.id}}/ -O script_{{script.id}}.sh && sed -i 's/\r$//' script_{{script.id}}.sh && chmod +x script_{{script.id}}.sh && sh script_{{script.id}}.sh";
     
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
