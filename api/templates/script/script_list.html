@@ -29,7 +29,7 @@ wgetbash
 
 <script>
     function copyToClipboard(script_id) {
-        const textToCopy = "wget https://{{host_dns}}/script_raw/" + script_id + "/ -O script_"+script_id+".sh && sed -i 's/\r$//' script_"+script_id+".sh && chmod +x script_"+script_id+".sh && sh script_"+script_id+".sh";
+        const textToCopy = "wget https://{{host_dns}}/script_raw/" + script_id + "/ -O script_"+script_id+".sh && sed -i 's/\\r$//' script_"+script_id+".sh && chmod +x script_"+script_id+".sh && sh script_"+script_id+".sh";
         
         const alertBox = document.getElementById('alert');
         const textarea = document.createElement('textarea');
