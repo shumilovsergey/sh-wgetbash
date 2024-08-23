@@ -18,17 +18,8 @@ RUN pip3 install dataclasses-serialization
 RUN pip3 install django-tailwind
 RUN pip3 install 'django-tailwind[reload]'
 
-RUN python3 manage.py makemigrations api
-RUN python3 manage.py migrate
-
-# RUN echo "from django.contrib.auth import get_user_model; \
-# User = get_user_model(); \
-# if not User.objects.filter(username='admin').exists(): \
-#     User.objects.create_superuser('admin', 'admin@example.com', 'admin')" > create_superuser.py
-
-# RUN python3 manage.py makemigrations api && \
-#     python3 manage.py migrate && \
-#     python3 create_superuser.py || true
+RUN pip3 manage.py makemigrations api
+RUN pip3 manage.py migrate
 
 EXPOSE 8000
 
