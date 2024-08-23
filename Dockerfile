@@ -16,7 +16,10 @@ RUN pip3 install dataclasses-serialization
 RUN pip3 install django-tailwind
 RUN pip3 install 'django-tailwind[reload]'
 
-
 COPY . .
+
+RUN python3 manage.py makemigrations api && \
+    python3 manage.py migrate && \
+    (echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python3 manage.py shell || true)
 
 CMD python manage.py runserver 0.0.0.0:8000
