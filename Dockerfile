@@ -18,8 +18,16 @@ RUN pip3 install 'django-tailwind[reload]'
 
 COPY . .
 
+RUN python3 manage.py migrate
+
+RUN echo "from django.contrib.auth import get_user_model; \
+User = get_user_model(); \
+if not User.objects.filter(username='admin').exists(): \
+    User.objects.create_superuser('admin', 'admin@example.com', 'admin')" > create_superuser.py
+
 RUN python3 manage.py makemigrations api && \
     python3 manage.py migrate && \
-    (echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@example.com', 'admin')" | python3 manage.py shell || true)
+    python3 create_superuser.py || true
+
 
 CMD python manage.py runserver 0.0.0.0:8000
