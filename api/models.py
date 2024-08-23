@@ -37,6 +37,6 @@ class Templates(models.Model):
 class MainPage(models.Model):
     title = models.CharField(max_length=56)
     text = models.TextField(default=None)
-    youtube_id = models.CharField(max_length=56, default="jfKfPfyJRdk")
+    iframe = models.TextField(default=None)
     def __str__(self):
         return self.title
