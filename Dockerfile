@@ -18,9 +18,6 @@ RUN pip3 install dataclasses-serialization
 RUN pip3 install django-tailwind
 RUN pip3 install 'django-tailwind[reload]'
 
-RUN pip3 manage.py makemigrations api
-RUN pip3 manage.py migrate
-
 EXPOSE 8000
 
 # Run the Django development server
