@@ -22,7 +22,7 @@ wgetbash
 
   </div>
 
-  <div class="video-container">{{data.iframe}}</div>
+  <div class="video-container">{{data.iframe|safe}}</div>
 </div> 
 
 <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
@@ -79,7 +79,7 @@ if ("{{auth}}" != true) {
     <pre class="">{{data.text}}</pre>
   </div>
 
-  <div class="video-container">{{data.iframe}}</div>
+  <div class="video-container">{{data.iframe|safe}}</div>
 </div>
 
 
