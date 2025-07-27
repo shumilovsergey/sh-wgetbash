@@ -1,68 +1,170 @@
 {% extends 'base.html' %}
 {% block title %}
-wgetbash
+Создать шаблон - WgetBash
 {% endblock %}
 {% block content %}
 {% load static %}
 
-<div class="w-[1000px] min-h-[600px] bg-sky-50 border-2 border-sky-200 rounded-3xl shadow-md flex flex-col ml-60">
-    <div class="m-10">
-        <div class="text-sky-900 mb-1">Название шаблона:</div>
-        <div class="comment flex justify-between">
-            <input required id="template_name" type="text" autocomplete="off" name="name" maxlength="56" class="text-sky-900 h-10 w-[450px] border-sky-100 border-2 rounded-3xl shadow-md focus:outline-none focus:ring-slate-200 focus:border-sky-200" maxlength="56">
-            <button id="order-btn" class="hover:bg-sky-200 h-10 w-36 hover:w-40 items-center flex justify-center duration-500 text-lg border-sky-200 text-sky-900 border-2 rounded-3xl shadow-md">сохранить</button>
-        </div>
+<div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Создать новый шаблон</h1>
+        <p class="text-gray-600">Выберите скрипты для объединения в шаблон</p>
     </div>
 
-    <div class="m-10 flex justify-evenly">
-        <div class="menu">
-            <div class="text-sky-900">Доступные скрипты:</div>
-            <div id="menu-items" class="w-[300px]">
-            {% for script in script_list %}
-                <div>
-                    <button class="text-sky-900 menu-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl" value="{{script.id}}" onclick="moveToOrder(this)">{{script.name}}</button>
-                </div>
-            {% endfor %}
+    <!-- Template Name Input -->
+    <div class="card p-6 mb-8">
+        <label for="template_name" class="block text-sm font-semibold text-gray-900 mb-2">
+            Название шаблона
+        </label>
+        <div class="flex gap-4">
+            <input 
+                required 
+                id="template_name" 
+                type="text" 
+                autocomplete="off" 
+                name="name" 
+                maxlength="56" 
+                class="input-modern flex-1" 
+                placeholder="Введите название шаблона..."
+            >
+            <button id="order-btn" class="btn-primary">
+                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                Сохранить шаблон
+            </button>
+        </div>
+        <p class="text-sm text-gray-500 mt-1">Максимум 56 символов</p>
+    </div>
+
+    {% if script_list %}
+    <!-- Script Selection Area -->
+    <div class="grid lg:grid-cols-2 gap-8">
+        <!-- Available Scripts -->
+        <div class="card p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                Доступные скрипты
+            </h3>
+            <div id="menu-items" class="space-y-2 min-h-[200px]">
+                {% for script in script_list %}
+                <button 
+                    class="menu-item w-full text-left p-3 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-gray-900 hover:text-blue-700" 
+                    value="{{script.id}}" 
+                    onclick="moveToOrder(this)"
+                >
+                    <div class="font-medium">{{script.name}}</div>
+                    <div class="text-sm text-gray-500">Создан: {{script.created|date:"d.m.Y"}}</div>
+                </button>
+                {% endfor %}
             </div>
         </div>
 
-        <div class="order">
-            <div class="text-sky-900">Шаблон:</div>
-            <div id="order-items" class="w-[300px]"></div>
+        <!-- Template Scripts -->
+        <div class="card p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                </svg>
+                Скрипты в шаблоне
+            </h3>
+            <div id="order-items" class="space-y-2 min-h-[200px]">
+                <div id="empty-state" class="text-center py-8 text-gray-500">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    <p>Перетащите сюда скрипты из левой колонки</p>
+                </div>
+            </div>
         </div>
     </div>
+
+    <!-- Back Button -->
+    <div class="mt-8">
+        <a href="{% url 'api:template_lis' %}" class="btn-secondary">
+            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+            </svg>
+            Назад к списку
+        </a>
+    </div>
+    {% else %}
+    <!-- No Scripts Available -->
+    <div class="card p-8 text-center">
+        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <h3 class="text-xl font-semibold text-gray-900 mb-2">Нет доступных скриптов</h3>
+        <p class="text-gray-600 mb-6">Для создания шаблона нужно сначала создать скрипты</p>
+        <a href="{% url 'api:script_create' %}" class="btn-primary">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Создать первый скрипт
+        </a>
+    </div>
+    {% endif %}
 </div>
 
 <script>
     function moveToOrder(menuItem) {
         const orderContainer = document.getElementById('order-items');
+        const emptyState = document.getElementById('empty-state');
+        
+        // Hide empty state if it exists
+        if (emptyState) {
+            emptyState.style.display = 'none';
+        }
+        
         const orderItem = document.createElement('button');
-        orderItem.className = 'order-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl text-sky-900';
-        orderItem.textContent = menuItem.textContent;
+        orderItem.className = 'order-item w-full text-left p-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 rounded-lg transition-all duration-200 text-gray-900 hover:text-emerald-700';
+        orderItem.innerHTML = menuItem.innerHTML;
         orderItem.value = menuItem.value;
         orderItem.onclick = () => moveToMenu(orderItem);
         orderContainer.appendChild(orderItem);
         menuItem.remove();
+        
+        updateEmptyState();
     }
 
     function moveToMenu(orderItem) {
         const menuContainer = document.getElementById('menu-items');
         const menuItem = document.createElement('button');
-        menuItem.className = 'menu-item mb-2 shadow-md w-[300px] duration-500 border-2 border-sky-200 hover:bg-sky-200 bg-sky-100 h-10 rounded-3xl text-sky-900';
-        menuItem.textContent = orderItem.textContent;
+        menuItem.className = 'menu-item w-full text-left p-3 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-gray-900 hover:text-blue-700';
+        menuItem.innerHTML = orderItem.innerHTML;
         menuItem.value = orderItem.value;
         menuItem.onclick = () => moveToOrder(menuItem);
         menuContainer.appendChild(menuItem);
         orderItem.remove();
+        
+        updateEmptyState();
+    }
+    
+    function updateEmptyState() {
+        const orderContainer = document.getElementById('order-items');
+        const emptyState = document.getElementById('empty-state');
+        const orderItems = orderContainer.querySelectorAll('.order-item');
+        
+        if (orderItems.length === 0 && emptyState) {
+            emptyState.style.display = 'block';
+        }
     }
 
     document.getElementById('order-btn').onclick = () => {
         const orderItems = document.querySelectorAll('#order-items .order-item');
         const scriptList = Array.from(orderItems).map(item => item.value);
-        // const scriptList = Array.from(orderItems);
         const templateName = document.getElementById('template_name').value;
 
-        if (( templateName.length > 0 && templateName.length < 56) && (scriptList.length > 0)) {
+        if ((templateName.length > 0 && templateName.length < 56) && (scriptList.length > 0)) {
+            // Show loading state
+            const btn = document.getElementById('order-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-4 h-4 inline mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>Сохранение...';
+            btn.disabled = true;
+            
             fetch('/template_create/', {
                 method: 'POST',
                 headers: {
@@ -73,18 +175,31 @@ wgetbash
             })
             .then(response => response.json())
             .then(data => {
-                sleep(0).then(() => {
+                if (data.status === 'success') {
                     window.location.href = '/template_list/';
-                });
+                } else {
+                    // Reset button on error
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    alert('Ошибка при создании шаблона');
+                }
+            })
+            .catch(error => {
+                // Reset button on error
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                alert('Ошибка при создании шаблона');
             });
         } else {
-            console.log('Conditions not met');
+            if (templateName.length === 0) {
+                alert('Введите название шаблона');
+            } else if (templateName.length >= 56) {
+                alert('Название шаблона слишком длинное');
+            } else if (scriptList.length === 0) {
+                alert('Выберите хотя бы один скрипт для шаблона');
+            }
         }
     };
-
-    function sleep(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
 
     function getCookie(name) {
         let cookieValue = null;

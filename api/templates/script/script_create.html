@@ -1,25 +1,93 @@
 {% extends 'base.html' %}
 {% block title %}
-wgetbash
+Создать скрипт - WgetBash
 {% endblock %}
 {% block content %}
 {% load static %}
 
-<div class="w-[1000px] bg-sky-50 border-2 border-sky-200 rounded-3xl shadow-md flex flex-col ml-60">
-    <form class="m-10" method="post" action="{% url 'api:script_create' %}">
-        {% csrf_token %}
-        <div class="text-sky-900 mb-1">Название:</div>
-        <div class="mb-10">
-            <input required type="text" autocomplete="off" name="name" maxlength="56" class="text-sky-900 h-10 w-[450px] border-sky-100 border-2 rounded-3xl shadow-md focus:outline-none focus:ring-slate-200 focus:border-sky-200" maxlength="56">
-        </div>
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Создать новый скрипт</h1>
+        <p class="text-gray-600">Напишите bash скрипт для автоматизации задач</p>
+    </div>
 
-        <div class="text-sky-900 mb-1">Cкрипт:</div>
-        <div class="mb-10">
-            <textarea autocomplete="off" required class="text-sky-900 w-full border-sky-100 border-2 rounded-3xl shadow-md focus:outline-none focus:ring-slate-200 focus:border-sky-200" name="text" rows="16"></textarea>
-        </div>
-        <button type="submit"  class="hover:bg-sky-200 h-10 w-36 hover:w-40 items-center flex justify-center duration-500 text-lg border-sky-200 text-sky-900 border-2 rounded-3xl shadow-md">Сохранить</button>
+    <!-- Form Card -->
+    <div class="card p-8">
+        <form method="post" action="{% url 'api:script_create' %}" class="space-y-6">
+            {% csrf_token %}
+            
+            <!-- Script Name -->
+            <div>
+                <label for="name" class="block text-sm font-semibold text-gray-900 mb-2">
+                    Название скрипта
+                </label>
+                <input 
+                    required 
+                    type="text" 
+                    autocomplete="off" 
+                    name="name" 
+                    id="name"
+                    maxlength="56" 
+                    class="input-modern" 
+                    placeholder="Введите название скрипта..."
+                >
+                <p class="text-sm text-gray-500 mt-1">Максимум 56 символов</p>
+            </div>
 
-    </form>
+            <!-- Script Content -->
+            <div>
+                <label for="text" class="block text-sm font-semibold text-gray-900 mb-2">
+                    Содержимое скрипта
+                </label>
+                <textarea 
+                    autocomplete="off" 
+                    required 
+                    class="textarea-modern font-mono text-sm" 
+                    name="text" 
+                    id="text"
+                    rows="20"
+                    placeholder="#!/bin/bash&#10;&#10;# Ваш bash скрипт здесь...&#10;echo 'Привет, мир!'"
+                ></textarea>
+                <p class="text-sm text-gray-500 mt-1">
+                    Напишите ваш bash скрипт. Заголовок #!/bin/bash будет добавлен автоматически при генерации.
+                </p>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                <a href="{% url 'api:script_list' %}" class="btn-secondary">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Назад к списку
+                </a>
+                
+                <button type="submit" class="btn-primary">
+                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Сохранить скрипт
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Help Section -->
+    <div class="mt-8 card p-6 bg-blue-50 border-blue-200">
+        <h3 class="text-lg font-semibold text-blue-900 mb-3">
+            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            Советы по написанию скриптов
+        </h3>
+        <ul class="text-blue-800 space-y-1">
+            <li>• Используйте понятные имена переменных и функций</li>
+            <li>• Добавляйте комментарии для сложных участков кода</li>
+            <li>• Проверяйте результаты выполнения команд</li>
+            <li>• Используйте `set -e` для остановки при ошибках</li>
+        </ul>
+    </div>
 </div>
 
 {% endblock %}

@@ -1,28 +1,57 @@
 {% extends 'base.html' %}
 {% block title %}
-wgetbash
+WgetBash - Генератор Bash скриптов
 {% endblock %}
 {% block content %}
 
 {% if request.session.auth != True %}
-<div class="flex justify-around text-sky-900 text-lg pt-48">
-  <div class="">
-    <form class="" action="{% url 'api:login' %}" method="GET">
-      <button class="text-lg shadow-md w-[256px] text-sky-900 duration-500 border-2 border-sky-500 hover:bg-sky-200 bg-sky-100 h-20 text-center rounded-3xl" type="submit">telegram login</button>
-    </form>
+<!-- Hero Section for Login -->
+<div class="min-h-screen flex items-center justify-center">
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+    <!-- Login Section -->
+    <div class="text-center lg:text-left">
+      <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
+        <span class="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">WgetBash</span>
+      </h1>
+      <p class="text-xl text-gray-600 mb-8 leading-relaxed">
+        Создавайте, управляйте и комбинируйте bash скрипты в мощные автоматизированные решения
+      </p>
+      
+      <!-- Login Options -->
+      <div class="space-y-6">
+        <form action="{% url 'api:login' %}" method="GET">
+          <button class="btn-primary w-full sm:w-auto text-lg px-8 py-4" type="submit">
+            <svg class="w-5 h-5 inline mr-3" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0C5.374 0 0 5.373 0 12s5.374 12 12 12 12-5.373 12-12S18.626 0 12 0zm5.568 8.16c-.169 1.858-.896 3.423-2.093 4.353-.36.28-.95.223-1.223-.147-.273-.37-.213-.963.147-1.243.821-.639 1.287-1.717 1.413-2.763-.126-1.046-.592-2.124-1.413-2.763-.36-.28-.42-.873-.147-1.243.273-.37.863-.427 1.223-.147 1.197.93 1.924 2.495 2.093 4.353z"/>
+            </svg>
+            Войти через Telegram
+          </button>
+        </form>
 
-    <div class="border-sky-500 shadow-md bg-sky-100 mt-10 pb-[20px] pl-[20px] pr-[20px] pt-[10px] border-2 rounded-3xl" id="qr_box">
-      <div class="pb-2 text-center text-lg text-sky-900">qr code login</div>
-      <div class="" id="qrcode"></div>
+        <div class="card p-6" id="qr_box">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">QR-код для входа</h3>
+          <div class="flex justify-center" id="qrcode"></div>
+          <p class="text-sm text-gray-500 text-center mt-4">
+            Отсканируйте QR-код в Telegram для быстрого входа
+          </p>
+        </div>
+
+        <form class="hidden" id="refresh" action="{% url 'api:main' %}" method="GET">
+          <button class="btn-secondary w-full" type="submit">
+            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Обновить QR-код
+          </button>
+        </form>
+      </div>
     </div>
 
-    <form class="hidden pt-[10px]" id="refresh" action="{% url 'api:main' %}" method="GET">
-      <button class="text-lg shadow-md w-[256px] text-sky-900 duration-500 border-2 border-sky-500 hover:bg-sky-200 bg-sky-100 h-20 text-center rounded-3xl" type="submit">обновить qr code</button>
-    </form>
-
+    <!-- Video/Content Section -->
+    <div class="flex justify-center lg:justify-end">
+      <div class="video-container max-w-lg">{{data.iframe|safe}}</div>
+    </div>
   </div>
-
-  <div class="video-container">{{data.iframe|safe}}</div>
 </div> 
 
 <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
@@ -73,16 +102,62 @@ if ("{{auth}}" != true) {
 </script>
 {% else %}
 
-<div class="flex justify-around text-sky-900 text-lg">
-  <div>
-    <pre class="pb-3">{{data.title}}</pre>
-    <pre class="">{{data.text}}</pre>
+<!-- Dashboard for Authenticated Users -->
+<div class="max-w-6xl mx-auto">
+  <!-- Welcome Section -->
+  <div class="text-center mb-12">
+    <h1 class="text-4xl font-bold text-gray-900 mb-4">
+      Добро пожаловать, <span class="text-blue-600">{{request.session.name}}</span>!
+    </h1>
+    <p class="text-xl text-gray-600">Управляйте своими bash скриптами и шаблонами</p>
   </div>
 
-  <div class="video-container">{{data.iframe|safe}}</div>
+  <div class="grid lg:grid-cols-2 gap-8 items-start">
+    <!-- Content Section -->
+    <div class="card p-8">
+      <h2 class="text-2xl font-bold text-gray-900 mb-4">{{data.title}}</h2>
+      <div class="prose text-gray-700 whitespace-pre-line">{{data.text}}</div>
+    </div>
+
+    <!-- Video/Media Section -->
+    <div class="card p-6">
+      <div class="video-container">{{data.iframe|safe}}</div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid md:grid-cols-2 gap-6 mt-12">
+    <div class="card p-6 hover:scale-105 transition-transform duration-200">
+      <div class="flex items-center mb-4">
+        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900">Скрипты</h3>
+      </div>
+      <p class="text-gray-600 mb-4">Создавайте и управляйте отдельными bash скриптами</p>
+      <form action="{% url 'api:script_list' %}" method="GET">
+        <button class="btn-primary w-full">Перейти к скриптам</button>
+      </form>
+    </div>
+
+    <div class="card p-6 hover:scale-105 transition-transform duration-200">
+      <div class="flex items-center mb-4">
+        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mr-4">
+          <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-semibold text-gray-900">Шаблоны</h3>
+      </div>
+      <p class="text-gray-600 mb-4">Комбинируйте скрипты в мощные шаблоны</p>
+      <form action="{% url 'api:template_lis' %}" method="GET">
+        <button class="btn-primary w-full">Перейти к шаблонам</button>
+      </form>
+    </div>
+  </div>
 </div>
-
-
 
 {% endif %}
 {% endblock %}
