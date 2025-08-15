@@ -5,116 +5,460 @@
 {% block content %}
 {% load static %}
 
-<div class="max-w-4xl mx-auto">
+<style>
+/* Ensure light theme for template edit page */
+body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .template-container {
+        padding: 16px !important;
+    }
+    
+    .template-form {
+        padding: 24px !important;
+    }
+    
+    .columns-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    .action-buttons {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+}
+</style>
+
+<div class="template-container" style="min-height: 100vh; background: #ffffff; padding: 32px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    
     <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">{{template.name}}</h1>
-        <p class="text-gray-600">Просмотр шаблона и входящих в него скриптов</p>
+    <div style="margin-bottom: 32px;">
+      <h1 style="font-size: 2rem; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">{{template.name}}</h1>
+      <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Редактирование шаблона и входящих в него скриптов</p>
     </div>
 
-    <!-- Template Info Card -->
-    <div class="card p-6 mb-8">
-        <div class="flex items-center justify-between">
-            <div>
-                <h3 class="text-lg font-semibold text-gray-900 mb-2">Информация о шаблоне</h3>
-                <div class="text-gray-600 space-y-1">
-                    <p>• Автор: {{template.author.name}}</p>
-                    <p>• Создан: {{template.created|date:"d.m.Y в H:i"}}</p>
-                    <p>• Количество скриптов: {{template.scripts.count}}</p>
+    <!-- Template Name -->
+    <div class="template-form" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 32px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); margin-bottom: 24px;">
+      <label for="template_name" style="display: block; font-size: 0.875rem; font-weight: 600; color: #0f172a; margin-bottom: 8px;">
+        Название шаблона
+      </label>
+      <input 
+        id="template_name" 
+        type="text" 
+        value="{{template.name}}"
+        autocomplete="off" 
+        maxlength="56" 
+        style="width: 100%; padding: 16px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; color: #0f172a; font-size: 0.875rem; transition: all 0.1s ease-out; outline: none; font-family: 'Inter', sans-serif;"
+        placeholder="Введите название шаблона..."
+        onfocus="this.style.borderColor='#2563eb'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';"
+        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';"
+      >
+      <p style="font-size: 0.75rem; color: #64748b; margin: 8px 0 0 0;">Максимум 56 символов</p>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="columns-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+      
+      <!-- Available Scripts Column -->
+      <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 24px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);">
+        <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 16px 0;">Доступные скрипты</h3>
+        <div id="available-scripts" style="display: flex; flex-direction: column; gap: 8px; min-height: 300px;">
+          <!-- Available scripts will be populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Template Scripts Column -->
+      <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 24px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);">
+        <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 16px 0;">Скрипты в шаблоне</h3>
+        <div id="template-scripts" style="display: flex; flex-direction: column; gap: 8px; min-height: 300px;">
+          {% if template.scripts.all %}
+          {% for script in template.scripts.all %}
+          <div id="template-script-{{script.id}}" class="template-script" data-script-id="{{script.id}}" style="background: #f0fdf4; border: 2px solid #059669; border-radius: 4px; transition: all 0.1s ease-out; overflow: hidden;">
+            <!-- Script Header -->
+            <div style="padding: 16px; cursor: pointer; transition: all 0.1s ease-out;"
+                 onclick="toggleScript('{{script.id}}')"
+                 onmouseover="this.style.background='#dcfce7';"
+                 onmouseout="this.style.background='transparent';">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="flex: 1;" onclick="event.stopPropagation(); moveToAvailable('{{script.id}}');">
+                  <h4 style="font-weight: 600; font-size: 0.875rem; color: #0f172a; margin: 0 0 4px 0;">{{script.name}}</h4>
+                  <p style="font-size: 0.75rem; color: #64748b; margin: 0;">Создан: {{script.created|date:"d.m.Y"}}</p>
                 </div>
-            </div>
-            <div class="flex items-center space-x-3">
-                <button class="btn-success" onclick="copyToClipboard()" id="copy-btn">
-                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                    </svg>
-                    Скопировать wget
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Scripts List -->
-    <div class="card p-6 mb-8">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-            <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            Скрипты в шаблоне ({{template.scripts.count}})
-        </h3>
-        
-        {% if template.scripts.all %}
-        <div class="space-y-3">
-            {% for script in template.scripts.all %}
-            <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 hover:bg-blue-50 hover:border-blue-300 transition-all duration-200">
-                <form action="{% url 'api:script_id' script_id=script.id %}" method="GET" class="w-full">
-                    <button class="w-full text-left group">
-                        <h4 class="font-medium text-gray-900 group-hover:text-blue-700 mb-1">{{script.name}}</h4>
-                        <p class="text-sm text-gray-500">Создан: {{script.created|date:"d.m.Y в H:i"}} • Автор: {{script.author}}</p>
-                    </button>
-                </form>
-            </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <div class="text-center py-8 text-gray-500">
-            <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
-            <p>В этом шаблоне нет скриптов</p>
-        </div>
-        {% endif %}
-    </div>
-
-    <!-- Actions Card -->
-    <div class="card p-6">
-        <h3 class="text-lg font-semibold text-gray-900 mb-4">Действия с шаблоном</h3>
-        <div class="flex items-center justify-between">
-            <div class="flex space-x-4">
-                <a href="{% url 'api:template_lis' %}" class="btn-secondary">
-                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
-                    </svg>
-                    Назад к списку
-                </a>
+                <svg id="arrow-{{script.id}}" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #059669; transition: transform 0.2s ease-out;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
             </div>
             
-            <form action="{% url 'api:template_delete' template_id=template.id %}" method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить этот шаблон? Это действие нельзя отменить.')">
-                {% csrf_token %}
-                <button class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                    </svg>
-                    Удалить шаблон
-                </button>
-            </form>
+            <!-- Script Content (Hidden by default) -->
+            <div id="content-{{script.id}}" style="display: none; border-top: 2px solid #059669; background: #ffffff;">
+              <div style="padding: 16px;">
+                <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 4px; padding: 16px;">
+                  <pre style="font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.75rem; line-height: 1.5; color: #0f172a; margin: 0; white-space: pre-wrap; word-wrap: break-word;">{{script.text}}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          {% else %}
+          <div id="empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #64748b; text-align: center;">
+            <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 16px; color: #cbd5e1;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <p style="font-size: 0.875rem; margin: 0;">Нажмите на скрипты слева, чтобы добавить их в шаблон</p>
+          </div>
+          {% endif %}
         </div>
+      </div>
     </div>
+
+    <!-- Action Buttons -->
+    <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 24px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);">
+      <div class="action-buttons" style="display: flex; align-items: center; justify-content: space-between;">
+        <!-- Back Button -->
+        <a href="{% url 'api:template_lis' %}" 
+           style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 4px; text-decoration: none; cursor: pointer; border: 2px solid #e2e8f0; outline: none; background: #ffffff; color: #475569; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+           title="Назад к списку"
+           onmouseover="this.style.background='#f1f5f9'; this.style.color='#0f172a'; this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+           onmouseout="this.style.background='#ffffff'; this.style.color='#475569'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+        </a>
+        
+        <!-- Action Buttons Group -->
+        <div style="display: flex; gap: 12px;">
+          <!-- Copy Button -->
+          <button onclick="copyToClipboard()" id="copy-btn"
+                  style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                  title="Скопировать команду"
+                  onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                  onmouseout="this.style.background='#059669'; this.style.borderColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+            </svg>
+          </button>
+          
+          <!-- Delete Template Button -->
+          <button type="button" onclick="confirmDelete()" 
+                  style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 4px; cursor: pointer; border: 2px solid #dc2626; outline: none; background: #dc2626; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                  title="Удалить шаблон"
+                  onmouseover="this.style.background='#b91c1c'; this.style.borderColor='#b91c1c'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                  onmouseout="this.style.background='#dc2626'; this.style.borderColor='#dc2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            </svg>
+          </button>
+          
+          <!-- Save Button -->
+          <button id="save-btn" onclick="saveTemplate()"
+                  style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 4px; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                  title="Сохранить изменения"
+                  onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                  onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden Delete Form -->
+    <form id="delete-form" action="{% url 'api:template_delete' template_id=template.id %}" method="POST" style="display: none;">
+      {% csrf_token %}
+    </form>
+
+  </div>
 </div>
 
 <script>
+    // Initial data
+    const allScripts = [
+        {% for script in all_scripts %}
+        {
+            id: "{{script.id}}",
+            name: "{{script.name}}",
+            created: "{{script.created|date:'d.m.Y'}}",
+            text: `{{script.text|escapejs}}`
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+    
+    const templateScripts = [
+        {% for script in template.scripts.all %}
+        "{{script.id}}"{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+    
+    let currentExpandedScript = null;
+    
+    // Initialize available scripts
+    function initializeAvailableScripts() {
+        const availableContainer = document.getElementById('available-scripts');
+        const availableScripts = allScripts.filter(script => !templateScripts.includes(script.id));
+        
+        if (availableScripts.length === 0) {
+            availableContainer.innerHTML = '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #64748b; text-align: center;"><p style="font-size: 0.875rem; margin: 0;">Все скрипты уже добавлены в шаблон</p></div>';
+            return;
+        }
+        
+        availableContainer.innerHTML = '';
+        availableScripts.forEach(script => {
+            const scriptElement = createScriptElement(script, 'available');
+            availableContainer.appendChild(scriptElement);
+        });
+    }
+    
+    // Create script element
+    function createScriptElement(script, type) {
+        const div = document.createElement('div');
+        div.id = `${type}-script-${script.id}`;
+        div.className = `${type}-script`;
+        div.setAttribute('data-script-id', script.id);
+        
+        const bgColor = type === 'available' ? '#ffffff' : '#f0fdf4';
+        const borderColor = type === 'available' ? '#e2e8f0' : '#059669';
+        const hoverBg = type === 'available' ? '#f1f5f9' : '#dcfce7';
+        const clickAction = type === 'available' ? `moveToTemplate('${script.id}')` : `moveToAvailable('${script.id}')`;
+        
+        div.style.cssText = `background: ${bgColor}; border: 2px solid ${borderColor}; border-radius: 4px; transition: all 0.1s ease-out; overflow: hidden;`;
+        
+        div.innerHTML = `
+            <div style="padding: 16px; cursor: pointer; transition: all 0.1s ease-out;"
+                 onclick="toggleScript('${script.id}')"
+                 onmouseover="this.style.background='${hoverBg}';"
+                 onmouseout="this.style.background='transparent';">
+              <div style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="flex: 1;" onclick="event.stopPropagation(); ${clickAction}">
+                  <h4 style="font-weight: 600; font-size: 0.875rem; color: #0f172a; margin: 0 0 4px 0;">${script.name}</h4>
+                  <p style="font-size: 0.75rem; color: #64748b; margin: 0;">Создан: ${script.created}</p>
+                </div>
+                <svg id="arrow-${script.id}" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: ${borderColor}; transition: transform 0.2s ease-out;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </div>
+            </div>
+            <div id="content-${script.id}" style="display: none; border-top: 2px solid ${borderColor}; background: #ffffff;">
+              <div style="padding: 16px;">
+                <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 4px; padding: 16px;">
+                  <pre style="font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.75rem; line-height: 1.5; color: #0f172a; margin: 0; white-space: pre-wrap; word-wrap: break-word;">${script.text}</pre>
+                </div>
+              </div>
+            </div>
+        `;
+        
+        return div;
+    }
+    
+    // Move script to template
+    function moveToTemplate(scriptId) {
+        const script = allScripts.find(s => s.id === scriptId);
+        if (!script) return;
+        
+        // Remove from available
+        const availableElement = document.getElementById(`available-script-${scriptId}`);
+        if (availableElement) availableElement.remove();
+        
+        // Add to template
+        const templateContainer = document.getElementById('template-scripts');
+        const emptyState = document.getElementById('empty-state');
+        if (emptyState) emptyState.remove();
+        
+        const scriptElement = createScriptElement(script, 'template');
+        templateContainer.appendChild(scriptElement);
+        
+        // Update template scripts array
+        templateScripts.push(scriptId);
+        
+        // Check if available scripts is empty
+        const availableContainer = document.getElementById('available-scripts');
+        if (availableContainer.children.length === 0) {
+            availableContainer.innerHTML = '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #64748b; text-align: center;"><p style="font-size: 0.875rem; margin: 0;">Все скрипты уже добавлены в шаблон</p></div>';
+        }
+    }
+    
+    // Move script to available
+    function moveToAvailable(scriptId) {
+        const script = allScripts.find(s => s.id === scriptId);
+        if (!script) return;
+        
+        // Remove from template
+        const templateElement = document.getElementById(`template-script-${scriptId}`);
+        if (templateElement) templateElement.remove();
+        
+        // Add to available
+        const availableContainer = document.getElementById('available-scripts');
+        if (availableContainer.innerHTML.includes('Все скрипты уже добавлены')) {
+            availableContainer.innerHTML = '';
+        }
+        
+        const scriptElement = createScriptElement(script, 'available');
+        availableContainer.appendChild(scriptElement);
+        
+        // Update template scripts array
+        const index = templateScripts.indexOf(scriptId);
+        if (index > -1) templateScripts.splice(index, 1);
+        
+        // Check if template scripts is empty
+        const templateContainer = document.getElementById('template-scripts');
+        if (templateContainer.children.length === 0) {
+            templateContainer.innerHTML = '<div id="empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #64748b; text-align: center;"><svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 16px; color: #cbd5e1;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg><p style="font-size: 0.875rem; margin: 0;">Нажмите на скрипты слева, чтобы добавить их в шаблон</p></div>';
+        }
+    }
+    
+    // Toggle script expansion
+    function toggleScript(scriptId) {
+        const content = document.getElementById('content-' + scriptId);
+        const arrow = document.getElementById('arrow-' + scriptId);
+        
+        if (!content || !arrow) return;
+        
+        // If clicking on the currently expanded script, just collapse it
+        if (currentExpandedScript === scriptId) {
+            content.style.display = 'none';
+            arrow.style.transform = 'rotate(0deg)';
+            currentExpandedScript = null;
+            return;
+        }
+        
+        // Collapse the previously expanded script if any
+        if (currentExpandedScript) {
+            const prevContent = document.getElementById('content-' + currentExpandedScript);
+            const prevArrow = document.getElementById('arrow-' + currentExpandedScript);
+            if (prevContent && prevArrow) {
+                prevContent.style.display = 'none';
+                prevArrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Expand the clicked script
+        content.style.display = 'block';
+        arrow.style.transform = 'rotate(180deg)';
+        currentExpandedScript = scriptId;
+    }
+    
+    // Save template
+    function saveTemplate() {
+        const templateName = document.getElementById('template_name').value;
+        const scriptList = Array.from(document.querySelectorAll('#template-scripts .template-script')).map(el => el.getAttribute('data-script-id'));
+        
+        if (!templateName.trim()) {
+            alert('Введите название шаблона');
+            return;
+        }
+        
+        if (templateName.length > 56) {
+            alert('Название шаблона слишком длинное');
+            return;
+        }
+        
+        if (scriptList.length === 0) {
+            alert('Выберите хотя бы один скрипт для шаблона');
+            return;
+        }
+        
+        // Show loading state
+        const btn = document.getElementById('save-btn');
+        const originalContent = btn.innerHTML;
+        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>';
+        btn.disabled = true;
+        
+        // Save template (this would need to be implemented on backend)
+        fetch('/template_edit/{{template.id}}/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ 
+                template_name: templateName,
+                script_list: scriptList 
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Show success and redirect
+                btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
+                setTimeout(() => {
+                    window.location.href = '/template_list/';
+                }, 1000);
+            } else {
+                // Reset button on error
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+                alert('Ошибка при сохранении шаблона');
+            }
+        })
+        .catch(error => {
+            // Reset button on error
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+            alert('Ошибка при сохранении шаблона');
+        });
+    }
+    
+    // Copy to clipboard
     function copyToClipboard() {
         const textToCopy = "wget https://{{host_dns}}/template_raw/{{template.id}}/ -O template_{{template.id}}.sh && sed -i 's/\\r$//' template_{{template.id}}.sh && chmod +x template_{{template.id}}.sh && sh template_{{template.id}}.sh";
         const btn = document.getElementById('copy-btn');
-        const originalText = btn.innerHTML;
+        const originalContent = btn.innerHTML;
         
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
         document.body.appendChild(textarea);
-    
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
-    
-        // Show feedback
-        btn.innerHTML = '<svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Скопировано!';
-        btn.className = 'bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5';
         
+        // Show success feedback
+        btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>';
         setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.className = 'btn-success';
-        }, 2000);
+            btn.innerHTML = originalContent;
+        }, 1500);
     }
+    
+    // Confirm delete
+    function confirmDelete() {
+        if (confirm('Вы уверены?')) {
+            document.getElementById('delete-form').submit();
+        }
+    }
+    
+    // Get CSRF cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeAvailableScripts();
+    });
 </script>
+
+<style>
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
 
 {% endblock %}

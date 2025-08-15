@@ -8,8 +8,8 @@
 <div class="max-w-4xl mx-auto">
     <!-- Header -->
     <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Создать новый скрипт</h1>
-        <p class="text-gray-600">Напишите bash скрипт для автоматизации задач</p>
+        <h1 class="mb-2" style="font-size: 2rem; font-weight: 700;">Создать новый скрипт</h1>
+        <p style="color: var(--text-secondary);">Напишите bash скрипт для автоматизации задач</p>
     </div>
 
     <!-- Form Card -->
@@ -18,8 +18,8 @@
             {% csrf_token %}
             
             <!-- Script Name -->
-            <div>
-                <label for="name" class="block text-sm font-semibold text-gray-900 mb-2">
+            <div class="form-group">
+                <label for="name" class="form-label">
                     Название скрипта
                 </label>
                 <input 
@@ -29,42 +29,42 @@
                     name="name" 
                     id="name"
                     maxlength="56" 
-                    class="input-modern" 
+                    class="form-input" 
                     placeholder="Введите название скрипта..."
                 >
-                <p class="text-sm text-gray-500 mt-1">Максимум 56 символов</p>
+                <p class="form-help">Максимум 56 символов</p>
             </div>
 
             <!-- Script Content -->
-            <div>
-                <label for="text" class="block text-sm font-semibold text-gray-900 mb-2">
+            <div class="form-group">
+                <label for="text" class="form-label">
                     Содержимое скрипта
                 </label>
                 <textarea 
                     autocomplete="off" 
                     required 
-                    class="textarea-modern font-mono text-sm" 
+                    class="form-input form-textarea" 
                     name="text" 
                     id="text"
                     rows="20"
                     placeholder="#!/bin/bash&#10;&#10;# Ваш bash скрипт здесь...&#10;echo 'Привет, мир!'"
                 ></textarea>
-                <p class="text-sm text-gray-500 mt-1">
+                <p class="form-help">
                     Напишите ваш bash скрипт. Заголовок #!/bin/bash будет добавлен автоматически при генерации.
                 </p>
             </div>
 
             <!-- Action Buttons -->
-            <div class="flex items-center justify-between pt-6 border-t border-gray-200">
-                <a href="{% url 'api:script_list' %}" class="btn-secondary">
-                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="flex items-center justify-between" style="padding-top: 1.5rem; border-top: 1px solid var(--border-primary);">
+                <a href="{% url 'api:script_list' %}" class="btn btn-secondary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
                     Назад к списку
                 </a>
                 
-                <button type="submit" class="btn-primary">
-                    <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button type="submit" class="btn btn-primary">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
                     Сохранить скрипт
@@ -74,18 +74,18 @@
     </div>
 
     <!-- Help Section -->
-    <div class="mt-8 card p-6 bg-blue-50 border-blue-200">
-        <h3 class="text-lg font-semibold text-blue-900 mb-3">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div class="help-section">
+        <h3 class="help-title">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
             Советы по написанию скриптов
         </h3>
-        <ul class="text-blue-800 space-y-1">
-            <li>• Используйте понятные имена переменных и функций</li>
-            <li>• Добавляйте комментарии для сложных участков кода</li>
-            <li>• Проверяйте результаты выполнения команд</li>
-            <li>• Используйте `set -e` для остановки при ошибках</li>
+        <ul class="help-list">
+            <li>Используйте понятные имена переменных и функций</li>
+            <li>Добавляйте комментарии для сложных участков кода</li>
+            <li>Проверяйте результаты выполнения команд</li>
+            <li>Используйте `set -e` для остановки при ошибках</li>
         </ul>
     </div>
 </div>

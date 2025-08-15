@@ -49,15 +49,25 @@ python manage.py createsuperuser
 python manage.py shell
 ```
 
-### Tailwind CSS Development
-```bash
-# Development mode (watch for changes)
-cd theme/static_src
-npm run dev
+### Frontend Development
+The application uses custom CSS with optional Tailwind CSS support:
+- Main stylesheet: `api/static/css/styles.css` - Modern dark minimal design
+- JavaScript enhancements: `api/static/js/app.js` - Interactive features
+- Tailwind CSS build (optional): `npm run dev` or `npm run build` in `theme/static_src/`
+- No build process required for custom CSS - served directly
 
-# Production build
-cd theme/static_src
-npm run build
+### Quick Development Setup
+```bash
+# Use the provided development script (recommended)
+chmod +x run_dev.sh
+./run_dev.sh
+
+# Manual setup alternative
+python3 -m venv venv
+source venv/bin/activate
+pip install django python-dotenv djangorestframework django-cors-headers requests
+python manage.py makemigrations && python manage.py migrate
+python manage.py runserver 0.0.0.0:8990
 ```
 
 ### Docker Development
@@ -108,3 +118,47 @@ Required environment variables (set in env.env):
 - Session-based access control for script/template operations
 - Users can only modify their own scripts and templates
 - CORS and CSRF protection configured for API endpoints
+
+## Testing and Quality
+
+The project does not include explicit test commands or linting configuration. When working on the codebase:
+- Django tests can be run with `python manage.py test`
+- Code quality should follow Django best practices
+- No specific linting or formatting tools are configured
+
+## Dependency Management
+
+Python dependencies are installed via pip in the Dockerfile and `run_dev.sh`:
+- Core: Django, DRF, CORS headers, dotenv, requests
+- Optional: django-tailwind integration
+- No requirements.txt file exists - dependencies are managed in Dockerfile
+- For Tailwind CSS: use npm commands in `theme/static_src/` directory
+- Development script automatically handles virtual environment and dependencies
+
+## Docker Configuration
+
+The application is containerized with:
+- Python 3.9 base image
+- Auto-migration and superuser creation on startup (admin/admin)
+- Exposed on port 8000 internally, mapped to 5008 externally via docker-compose
+- Pre-built image available at ghcr.io/shumilovsergey/wgetbash:latest
+- Development server runs on port 8990 when using `run_dev.sh`
+
+## Key Implementation Details
+
+### Session Management and Authentication
+- Custom middleware (`api.middleware`) handles session creation and debugging
+- Session IDs are generated for anonymous users and linked to Telegram authentication
+- Authentication flow requires Telegram bot interaction before accessing protected features
+
+### Script Processing Pipeline
+- Individual scripts are stored in the `Scripts` model with author tracking
+- Templates combine multiple scripts using the `Templates` model with many-to-many relationships
+- Script downloads include bash headers and separators defined in `server/const.py`
+- Raw downloads format scripts with proper shebangs and completion messages
+
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

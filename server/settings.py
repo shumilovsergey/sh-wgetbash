@@ -29,9 +29,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'api.apps.ApiConfig',
-	'tailwind',
-    'theme',
-	'django_browser_reload',
     'bot.apps.BotConfig',
 ]
 
@@ -102,8 +99,6 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-TAILWIND_APP_NAME = 'theme'
 
 INTERNAL_IPS = [
     "127.0.0.1",

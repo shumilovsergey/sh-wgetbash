@@ -5,122 +5,155 @@
 {% block content %}
 {% load static %}
 
-<div class="max-w-4xl mx-auto">
-    <!-- Header Section -->
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-900">Ваши шаблоны</h1>
-            <p class="text-gray-600 mt-2">Комбинируйте скрипты в мощные шаблоны</p>
-        </div>
-        <form action="{% url 'api:template_create' %}" method="GET">
-            <button class="btn-primary">
-                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Создать шаблон
-            </button>
-        </form>
-    </div>
+<style>
+/* Ensure light theme for template list page */
+body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
 
-    <!-- Success Alert -->
-    <div id="alert" class="transition-opacity opacity-0 hidden bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-xl mb-6">
-        <div class="flex items-center">
-            <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-            </svg>
-            Команда wget скопирована в буфер обмена
-        </div>
-    </div>
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .template-container {
+        padding: 16px !important;
+    }
+    
+    .template-item {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 16px !important;
+    }
+    
+    .template-actions {
+        justify-content: center !important;
+    }
+}
+</style>
 
-    <!-- Templates Grid -->
+<div class="template-container" style="min-height: 100vh; background: #ffffff; padding: 32px;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    
     {% if template_list %}
-    <div class="space-y-4">
+    <!-- Templates List -->
+    <div style="padding-top: 32px;">
+      
+      <!-- Header with Create Button -->
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;">
+        <h1 style="font-size: 2rem; font-weight: 700; color: #0f172a; margin: 0;">Ваши шаблоны</h1>
+        <form action="{% url 'api:template_create' %}" method="GET">
+          <button style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                  type="submit"
+                  title="Создать шаблон"
+                  onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                  onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+      <!-- Templates List -->
+      <div style="display: flex; flex-direction: column; gap: 16px;">
         {% for template in template_list %}
-        <div class="card p-6">
-            <div class="flex items-center justify-between">
-                <div class="flex-1">
-                    <form action="{% url 'api:template_id' template_id=template.id %}" method="GET" class="flex-1">
-                        <button class="text-left w-full group">
-                            <h3 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
-                                {{template.name}}
-                            </h3>
-                            <p class="text-sm text-gray-500 mt-1">
-                                Создан: {{template.created|date:"d.m.Y в H:i"}} • 
-                                Скриптов: {{template.scripts.count}}
-                            </p>
-                        </button>
-                    </form>
-                </div>
-                <div class="flex items-center space-x-3 ml-4">
-                    <button id="{{template.id}}" class="btn-success" onclick="copyToClipboard(this.id)" title="Скопировать команду wget">
-                        <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-                        </svg>
-                        wget
-                    </button>
-                    <form action="{% url 'api:template_id' template_id=template.id %}" method="GET">
-                        <button class="btn-secondary">
-                            <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-                            </svg>
-                            Просмотр
-                        </button>
-                    </form>
-                </div>
-            </div>
+        <div class="template-item" style="display: flex; align-items: center; justify-content: space-between; padding: 24px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out; cursor: pointer;"
+             onclick="window.location.href='{% url 'api:template_id' template_id=template.id %}'"
+             onmouseover="this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+             onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+          
+          <!-- Template Info -->
+          <div style="flex: 1;">
+            <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 4px 0;">{{template.name}}</h3>
+            <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Создан: {{template.created|date:"d.m.Y в H:i"}} • Скриптов: {{template.scripts.count}}</p>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="template-actions" style="display: flex; gap: 8px;">
+            <!-- Copy Button -->
+            <button onclick="event.stopPropagation(); copyToClipboard('{{template.id}}')" 
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                    title="Скопировать команду"
+                    onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                    onmouseout="this.style.background='#059669'; this.style.borderColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+              </svg>
+            </button>
+            
+            <!-- View Button -->
+            <button onclick="event.stopPropagation(); window.location.href='{% url 'api:template_id' template_id=template.id %}';" 
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #64748b; outline: none; background: #64748b; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                    title="Просмотр шаблона"
+                    onmouseover="this.style.background='#475569'; this.style.borderColor='#475569'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                    onmouseout="this.style.background='#64748b'; this.style.borderColor='#64748b'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+              </svg>
+            </button>
+          </div>
         </div>
         {% endfor %}
+      </div>
     </div>
+    
     {% else %}
-    <!-- Empty State -->
-    <div class="text-center py-12">
-        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+    <!-- Empty State - Centered Create Button -->
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+      <div style="text-align: center;">
+        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 24px auto; color: #cbd5e1;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
         </svg>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Пока нет шаблонов</h3>
-        <p class="text-gray-600 mb-6">Создайте свой первый шаблон из существующих скриптов</p>
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0 0 8px 0;">Пока нет шаблонов</h3>
+        <p style="font-size: 0.875rem; color: #64748b; margin: 0 0 32px 0;">Создайте свой первый шаблон из существующих скриптов</p>
         <form action="{% url 'api:template_create' %}" method="GET">
-            <button class="btn-primary">
-                <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
-                Создать первый шаблон
-            </button>
+          <button style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 24px 48px; border-radius: 4px; font-size: 1.125rem; font-weight: 600; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); transition: all 0.1s ease-out;"
+                  type="submit"
+                  onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 rgba(0, 0, 0, 0.2)';"
+                  onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Создать первый шаблон
+          </button>
         </form>
+      </div>
     </div>
     {% endif %}
+  </div>
+</div>
+
+<!-- Success Alert -->
+<div id="alert" style="position: fixed; top: 32px; right: 32px; background: #f0fdf4; border: 2px solid #059669; color: #059669; padding: 16px 24px; border-radius: 4px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); display: none; z-index: 1000;">
+  <div style="display: flex; align-items: center; gap: 8px;">
+    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+    </svg>
+    Команда скопирована в буфер обмена
+  </div>
 </div>
 
 <script>
     function copyToClipboard(template_id) {
-        const textToCopy = "wget https://{{host_dns}}/template_raw/" + template_id + "/ -O template_"+template_id+".sh && sed -i 's/\\r$//' template_"+template_id+".sh && chmod +x template_"+template_id+".sh && sh template_"+template_id+".sh";
+        const textToCopy = "wget https://{{host_dns}}/template_raw/" + template_id + "/ -O template_" + template_id + ".sh && sed -i 's/\\r$//' template_" + template_id + ".sh && chmod +x template_" + template_id + ".sh && sh template_" + template_id + ".sh";
         
         const alertBox = document.getElementById('alert');
+        
+        // Create temporary textarea for copying
         const textarea = document.createElement('textarea');
         textarea.value = textToCopy;
         document.body.appendChild(textarea);
-    
         textarea.select();
         document.execCommand('copy');
         document.body.removeChild(textarea);
 
-        alertBox.classList.remove('hidden');
-
+        // Show success alert
+        alertBox.style.display = 'block';
+        
+        // Hide alert after 3 seconds
         setTimeout(function() {
-            alertBox.classList.remove("opacity-0"); 
-            alertBox.classList.add("opacity-300");
-        }, 10);
-
-        setTimeout(function() {
-            alertBox.classList.remove("opacity-300");
-            alertBox.classList.add("opacity-0");
-        }, 2000);
-
-        setTimeout(function() {
-            alertBox.classList.add("hidden");
-        }, 2500);
-
+            alertBox.style.display = 'none';
+        }, 3000);
     }
 </script>
 

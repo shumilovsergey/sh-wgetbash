@@ -5,108 +5,150 @@
 {% block content %}
 {% load static %}
 
-<div class="max-w-6xl mx-auto">
+<style>
+/* Ensure light theme for template create page */
+body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .template-container {
+        padding: 16px !important;
+    }
+    
+    .template-form {
+        padding: 24px !important;
+    }
+    
+    .columns-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    .action-buttons {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+}
+</style>
+
+<div class="template-container" style="min-height: 100vh; background: #ffffff; padding: 32px;">
+  <div style="max-width: 1000px; margin: 0 auto;">
+    
     <!-- Header -->
-    <div class="mb-8">
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Создать новый шаблон</h1>
-        <p class="text-gray-600">Выберите скрипты для объединения в шаблон</p>
+    <div style="margin-bottom: 32px;">
+      <h1 style="font-size: 2rem; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">Создать новый шаблон</h1>
+      <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Выберите скрипты для объединения в шаблон</p>
     </div>
 
-    <!-- Template Name Input -->
-    <div class="card p-6 mb-8">
-        <label for="template_name" class="block text-sm font-semibold text-gray-900 mb-2">
-            Название шаблона
-        </label>
-        <div class="flex gap-4">
-            <input 
-                required 
-                id="template_name" 
-                type="text" 
-                autocomplete="off" 
-                name="name" 
-                maxlength="56" 
-                class="input-modern flex-1" 
-                placeholder="Введите название шаблона..."
-            >
-            <button id="order-btn" class="btn-primary">
-                <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                </svg>
-                Сохранить шаблон
-            </button>
-        </div>
-        <p class="text-sm text-gray-500 mt-1">Максимум 56 символов</p>
+    <!-- Template Name -->
+    <div class="template-form" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 32px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); margin-bottom: 24px;">
+      <label for="template_name" style="display: block; font-size: 0.875rem; font-weight: 600; color: #0f172a; margin-bottom: 8px;">
+        Название шаблона
+      </label>
+      <input 
+        required 
+        id="template_name" 
+        type="text" 
+        autocomplete="off" 
+        name="name" 
+        maxlength="56" 
+        style="width: 100%; padding: 16px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; color: #0f172a; font-size: 0.875rem; transition: all 0.1s ease-out; outline: none; font-family: 'Inter', sans-serif;"
+        placeholder="Введите название шаблона..."
+        onfocus="this.style.borderColor='#2563eb'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';"
+        onblur="this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';"
+      >
+      <p style="font-size: 0.75rem; color: #64748b; margin: 8px 0 0 0;">Максимум 56 символов</p>
     </div>
 
     {% if script_list %}
-    <!-- Script Selection Area -->
-    <div class="grid lg:grid-cols-2 gap-8">
-        <!-- Available Scripts -->
-        <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                </svg>
-                Доступные скрипты
-            </h3>
-            <div id="menu-items" class="space-y-2 min-h-[200px]">
-                {% for script in script_list %}
-                <button 
-                    class="menu-item w-full text-left p-3 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-gray-900 hover:text-blue-700" 
-                    value="{{script.id}}" 
-                    onclick="moveToOrder(this)"
-                >
-                    <div class="font-medium">{{script.name}}</div>
-                    <div class="text-sm text-gray-500">Создан: {{script.created|date:"d.m.Y"}}</div>
-                </button>
-                {% endfor %}
-            </div>
+    <!-- Two Column Layout -->
+    <div class="columns-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+      
+      <!-- Available Scripts Column -->
+      <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 24px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);">
+        <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 16px 0;">Доступные скрипты</h3>
+        <div id="menu-items" style="display: flex; flex-direction: column; gap: 8px; min-height: 300px;">
+          {% for script in script_list %}
+          <button 
+            class="menu-item" 
+            value="{{script.id}}" 
+            onclick="moveToOrder(this)"
+            style="width: 100%; text-align: left; padding: 16px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; color: #0f172a; cursor: pointer; transition: all 0.1s ease-out; outline: none;"
+            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#2563eb'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';"
+            onmouseout="this.style.background='#ffffff'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';"
+          >
+            <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 4px;">{{script.name}}</div>
+            <div style="font-size: 0.75rem; color: #64748b;">Создан: {{script.created|date:"d.m.Y"}}</div>
+          </button>
+          {% endfor %}
         </div>
+      </div>
 
-        <!-- Template Scripts -->
-        <div class="card p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4 flex items-center">
-                <svg class="w-5 h-5 mr-2 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                </svg>
-                Скрипты в шаблоне
-            </h3>
-            <div id="order-items" class="space-y-2 min-h-[200px]">
-                <div id="empty-state" class="text-center py-8 text-gray-500">
-                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                    </svg>
-                    <p>Перетащите сюда скрипты из левой колонки</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Back Button -->
-    <div class="mt-8">
-        <a href="{% url 'api:template_lis' %}" class="btn-secondary">
-            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      <!-- Template Scripts Column -->
+      <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 24px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);">
+        <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 16px 0;">Скрипты в шаблоне</h3>
+        <div id="order-items" style="display: flex; flex-direction: column; gap: 8px; min-height: 300px;">
+          <div id="empty-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #64748b; text-align: center;">
+            <svg width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin-bottom: 16px; color: #cbd5e1;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
             </svg>
-            Назад к списку
-        </a>
+            <p style="font-size: 0.875rem; margin: 0;">Нажмите на скрипты слева, чтобы добавить их в шаблон</p>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- Action Buttons -->
+    <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 24px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);">
+      <div class="action-buttons" style="display: flex; align-items: center; justify-content: space-between;">
+        <!-- Back Button -->
+        <a href="{% url 'api:template_lis' %}" 
+           style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 4px; text-decoration: none; cursor: pointer; border: 2px solid #e2e8f0; outline: none; background: #ffffff; color: #475569; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+           title="Назад к списку"
+           onmouseover="this.style.background='#f1f5f9'; this.style.color='#0f172a'; this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+           onmouseout="this.style.background='#ffffff'; this.style.color='#475569'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+        </a>
+        
+        <!-- Save Button -->
+        <button id="order-btn" 
+                style="display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border-radius: 4px; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                title="Сохранить шаблон"
+                onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
     {% else %}
     <!-- No Scripts Available -->
-    <div class="card p-8 text-center">
-        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+    <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 48px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); text-align: center;">
+      <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 24px auto; color: #cbd5e1;">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+      </svg>
+      <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0 0 8px 0;">Нет доступных скриптов</h3>
+      <p style="font-size: 0.875rem; color: #64748b; margin: 0 0 32px 0;">Для создания шаблона нужно сначала создать скрипты</p>
+      <a href="{% url 'api:script_create' %}" 
+         style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 24px; border-radius: 4px; font-size: 0.875rem; font-weight: 600; text-decoration: none; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+         onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+         onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        <h3 class="text-xl font-semibold text-gray-900 mb-2">Нет доступных скриптов</h3>
-        <p class="text-gray-600 mb-6">Для создания шаблона нужно сначала создать скрипты</p>
-        <a href="{% url 'api:script_create' %}" class="btn-primary">
-            <svg class="w-5 h-5 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            Создать первый скрипт
-        </a>
+        Создать первый скрипт
+      </a>
     </div>
     {% endif %}
+
+  </div>
 </div>
 
 <script>
@@ -120,10 +162,37 @@
         }
         
         const orderItem = document.createElement('button');
-        orderItem.className = 'order-item w-full text-left p-3 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 hover:border-emerald-300 rounded-lg transition-all duration-200 text-gray-900 hover:text-emerald-700';
+        orderItem.className = 'order-item';
         orderItem.innerHTML = menuItem.innerHTML;
         orderItem.value = menuItem.value;
         orderItem.onclick = () => moveToMenu(orderItem);
+        
+        // Style the order item
+        orderItem.style.cssText = `
+            width: 100%; 
+            text-align: left; 
+            padding: 16px; 
+            background: #f0fdf4; 
+            border: 2px solid #059669; 
+            border-radius: 4px; 
+            color: #0f172a; 
+            cursor: pointer; 
+            transition: all 0.1s ease-out; 
+            outline: none;
+        `;
+        
+        orderItem.onmouseover = function() {
+            this.style.background = '#dcfce7';
+            this.style.borderColor = '#047857';
+            this.style.boxShadow = '0 2px 0 rgba(0, 0, 0, 0.1)';
+        };
+        
+        orderItem.onmouseout = function() {
+            this.style.background = '#f0fdf4';
+            this.style.borderColor = '#059669';
+            this.style.boxShadow = 'none';
+        };
+        
         orderContainer.appendChild(orderItem);
         menuItem.remove();
         
@@ -133,10 +202,37 @@
     function moveToMenu(orderItem) {
         const menuContainer = document.getElementById('menu-items');
         const menuItem = document.createElement('button');
-        menuItem.className = 'menu-item w-full text-left p-3 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-300 rounded-lg transition-all duration-200 text-gray-900 hover:text-blue-700';
+        menuItem.className = 'menu-item';
         menuItem.innerHTML = orderItem.innerHTML;
         menuItem.value = orderItem.value;
         menuItem.onclick = () => moveToOrder(menuItem);
+        
+        // Style the menu item
+        menuItem.style.cssText = `
+            width: 100%; 
+            text-align: left; 
+            padding: 16px; 
+            background: #ffffff; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 4px; 
+            color: #0f172a; 
+            cursor: pointer; 
+            transition: all 0.1s ease-out; 
+            outline: none;
+        `;
+        
+        menuItem.onmouseover = function() {
+            this.style.background = '#f1f5f9';
+            this.style.borderColor = '#2563eb';
+            this.style.boxShadow = '0 2px 0 rgba(0, 0, 0, 0.1)';
+        };
+        
+        menuItem.onmouseout = function() {
+            this.style.background = '#ffffff';
+            this.style.borderColor = '#e2e8f0';
+            this.style.boxShadow = 'none';
+        };
+        
         menuContainer.appendChild(menuItem);
         orderItem.remove();
         
@@ -149,7 +245,7 @@
         const orderItems = orderContainer.querySelectorAll('.order-item');
         
         if (orderItems.length === 0 && emptyState) {
-            emptyState.style.display = 'block';
+            emptyState.style.display = 'flex';
         }
     }
 
@@ -161,8 +257,8 @@
         if ((templateName.length > 0 && templateName.length < 56) && (scriptList.length > 0)) {
             // Show loading state
             const btn = document.getElementById('order-btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<svg class="w-4 h-4 inline mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>Сохранение...';
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="animation: spin 1s linear infinite;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>';
             btn.disabled = true;
             
             fetch('/template_create/', {
@@ -179,14 +275,14 @@
                     window.location.href = '/template_list/';
                 } else {
                     // Reset button on error
-                    btn.innerHTML = originalText;
+                    btn.innerHTML = originalContent;
                     btn.disabled = false;
                     alert('Ошибка при создании шаблона');
                 }
             })
             .catch(error => {
                 // Reset button on error
-                btn.innerHTML = originalText;
+                btn.innerHTML = originalContent;
                 btn.disabled = false;
                 alert('Ошибка при создании шаблона');
             });
@@ -216,5 +312,12 @@
         return cookieValue;
     }
 </script>
+
+<style>
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+</style>
 
 {% endblock %}

@@ -21,8 +21,17 @@ class Main(View):
         bot_name = BOT_NAME
         session_id = request.session["session_id"]
         auth = request.session["auth"]
-        data = MainPage.objects.all()
-        data = data[0]
+        
+        # Get or create default MainPage data
+        if MainPage.objects.exists():
+            data = MainPage.objects.first()
+        else:
+            # Create default MainPage if none exists
+            data = MainPage.objects.create(
+                title="WgetBash",
+                text="Создавайте, управляйте и комбинируйте bash скрипты в мощные автоматизированные решения.",
+                iframe=""
+            )
         
         return render(request, 'main.html', {"bot_name":bot_name, "session_id":session_id, "auth":auth, "data":data})
     

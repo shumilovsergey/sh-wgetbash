@@ -5,51 +5,121 @@ WgetBash - Генератор Bash скриптов
 {% block content %}
 
 {% if request.session.auth != True %}
-<!-- Hero Section for Login -->
-<div class="min-h-screen flex items-center justify-center">
-  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-    <!-- Login Section -->
-    <div class="text-center lg:text-left">
-      <h1 class="text-5xl lg:text-6xl font-bold text-gray-900 mb-6">
-        <span class="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">WgetBash</span>
-      </h1>
-      <p class="text-xl text-gray-600 mb-8 leading-relaxed">
-        Создавайте, управляйте и комбинируйте bash скрипты в мощные автоматизированные решения
-      </p>
-      
-      <!-- Login Options -->
-      <div class="space-y-6">
-        <form action="{% url 'api:login' %}" method="GET">
-          <button class="btn-primary w-full sm:w-auto text-lg px-8 py-4" type="submit">
-            <svg class="w-5 h-5 inline mr-3" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C5.374 0 0 5.373 0 12s5.374 12 12 12 12-5.373 12-12S18.626 0 12 0zm5.568 8.16c-.169 1.858-.896 3.423-2.093 4.353-.36.28-.95.223-1.223-.147-.273-.37-.213-.963.147-1.243.821-.639 1.287-1.717 1.413-2.763-.126-1.046-.592-2.124-1.413-2.763-.36-.28-.42-.873-.147-1.243.273-.37.863-.427 1.223-.147 1.197.93 1.924 2.495 2.093 4.353z"/>
-            </svg>
-            Войти через Telegram
-          </button>
-        </form>
+<style>
+/* Force light theme in case of caching issues */
+body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
 
-        <div class="card p-6" id="qr_box">
-          <h3 class="text-lg font-semibold text-gray-900 mb-4 text-center">QR-код для входа</h3>
-          <div class="flex justify-center" id="qrcode"></div>
-          <p class="text-sm text-gray-500 text-center mt-4">
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-title-mobile {
+        font-size: 2.5rem !important;
+        line-height: 1.1 !important;
+    }
+    
+    .hero-subtitle-mobile {
+        font-size: 1.125rem !important;
+        margin-bottom: 32px !important;
+    }
+    
+    .page-container-mobile {
+        padding: 16px !important;
+    }
+    
+    .qr-container-mobile {
+        max-width: 320px !important;
+        padding: 24px !important;
+    }
+    
+    .qr-wrapper-mobile {
+        width: 180px !important;
+        height: 180px !important;
+        padding: 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-title-mobile {
+        font-size: 2rem !important;
+    }
+    
+    .hero-subtitle-mobile {
+        font-size: 1rem !important;
+    }
+    
+    .qr-container-mobile {
+        max-width: 280px !important;
+        padding: 16px !important;
+    }
+    
+    .qr-wrapper-mobile {
+        width: 160px !important;
+        height: 160px !important;
+        padding: 8px !important;
+    }
+}
+</style>
+
+<!-- Perfect Vertical and Horizontal Center Login Page -->
+<div class="page-container-mobile" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px; background: #ffffff;">
+  <div style="width: 100%; max-width: 1200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px;">
+    
+    <!-- Hero Section -->
+    <div style="width: 100%; max-width: 600px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px;">
+      <div>
+        <h1 class="hero-title-mobile" style="font-size: 3rem; font-weight: 800; color: #2563eb; margin-bottom: 16px; letter-spacing: -0.025em;">WgetBash</h1>
+        <p class="hero-subtitle-mobile" style="font-size: 1.25rem; color: #475569; margin-bottom: 48px; max-width: 500px; line-height: 1.6;">
+          Создавайте, управляйте и комбинируйте bash скрипты в мощные автоматизированные решения
+        </p>
+      </div>
+      
+      <!-- Login Button -->
+      <form action="{% url 'api:login' %}" method="GET" style="width: 100%; max-width: 400px;">
+        <button style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 24px 48px; border-radius: 4px; font-size: 1.125rem; font-weight: 700; text-decoration: none; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); width: 100%; transition: all 0.1s ease-out;" 
+                type="submit"
+                onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+          <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 0C5.374 0 0 5.373 0 12s5.374 12 12 12 12-5.373 12-12S18.626 0 12 0zm5.568 8.16c-.169 1.858-.896 3.423-2.093 4.353-.36.28-.95.223-1.223-.147-.273-.37-.213-.963.147-1.243.821-.639 1.287-1.717 1.413-2.763-.126-1.046-.592-2.124-1.413-2.763-.36-.28-.42-.873-.147-1.243.273-.37.863-.427 1.223-.147 1.197.93 1.924 2.495 2.093 4.353z"/>
+          </svg>
+          Войти через Telegram
+        </button>
+      </form>
+
+      <!-- QR Code Section -->
+      <div id="qr_box" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; width: 100%; max-width: 400px; margin: 0 auto;">
+        <div class="qr-container-mobile" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 32px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); width: 100%; max-width: 350px; aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px;">
+          <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; text-align: center; margin: 0;">QR-код для входа</h3>
+          <div class="qr-wrapper-mobile" style="width: 216px; height: 216px; display: flex; align-items: center; justify-content: center; border: 2px solid #cbd5e1; border-radius: 3px; background: #f8fafc; padding: 16px;">
+            <div id="qrcode"></div>
+          </div>
+          <p style="font-size: 0.875rem; color: #64748b; text-align: center; line-height: 1.5; margin: 0;">
             Отсканируйте QR-код в Telegram для быстрого входа
           </p>
         </div>
-
-        <form class="hidden" id="refresh" action="{% url 'api:main' %}" method="GET">
-          <button class="btn-secondary w-full" type="submit">
-            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-            </svg>
-            Обновить QR-код
-          </button>
-        </form>
       </div>
+
+      <!-- Refresh Button -->
+      <form class="hidden" id="refresh" action="{% url 'api:main' %}" method="GET" style="width: 100%; max-width: 400px;">
+        <button style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 32px; border-radius: 4px; font-size: 0.875rem; font-weight: 600; text-decoration: none; cursor: pointer; border: 2px solid #e2e8f0; outline: none; background: #ffffff; color: #475569; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05); width: 100%; transition: all 0.1s ease-out;" 
+                type="submit"
+                onmouseover="this.style.background='#f1f5f9'; this.style.color='#0f172a'; this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';"
+                onmouseout="this.style.background='#ffffff'; this.style.color='#475569'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 1px 0 rgba(0, 0, 0, 0.05)';">
+          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Обновить QR-код
+        </button>
+      </form>
     </div>
 
     <!-- Video/Content Section -->
-    <div class="flex justify-center lg:justify-end">
-      <div class="video-container max-w-lg">{{data.iframe|safe}}</div>
+    <div style="w-full max-w-lg text-center">
+      {{data.iframe|safe}}
     </div>
   </div>
 </div> 
@@ -61,8 +131,8 @@ WgetBash - Генератор Bash скриптов
     text: "https://t.me/{{bot_name}}?start={{session_id}}qrcode",
     width: 216, // QR code width
     height: 216, // QR code height
-    colorDark: "#0C4A6E", // Foreground color
-    colorLight: "#E0F2FE" // Background color
+    colorDark: "#2563eb", // Primary blue
+    colorLight: "#ffffff" // White background
   };
   new QRCode(document.getElementById("qrcode"), options);
 
@@ -103,58 +173,103 @@ if ("{{auth}}" != true) {
 {% else %}
 
 <!-- Dashboard for Authenticated Users -->
-<div class="max-w-6xl mx-auto">
-  <!-- Welcome Section -->
-  <div class="text-center mb-12">
-    <h1 class="text-4xl font-bold text-gray-900 mb-4">
-      Добро пожаловать, <span class="text-blue-600">{{request.session.name}}</span>!
-    </h1>
-    <p class="text-xl text-gray-600">Управляйте своими bash скриптами и шаблонами</p>
-  </div>
+<style>
+/* Ensure light theme for dashboard */
+body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
 
-  <div class="grid lg:grid-cols-2 gap-8 items-start">
-    <!-- Content Section -->
-    <div class="card p-8">
-      <h2 class="text-2xl font-bold text-gray-900 mb-4">{{data.title}}</h2>
-      <div class="prose text-gray-700 whitespace-pre-line">{{data.text}}</div>
-    </div>
+/* Responsive dashboard adjustments */
+@media (max-width: 768px) {
+    .dashboard-title {
+        font-size: 2rem !important;
+        line-height: 1.1 !important;
+    }
+    
+    .dashboard-subtitle {
+        font-size: 1.125rem !important;
+    }
+    
+    .dashboard-container {
+        padding: 16px !important;
+    }
+    
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+    }
+    
+    .dashboard-card {
+        padding: 24px !important;
+    }
+}
 
-    <!-- Video/Media Section -->
-    <div class="card p-6">
-      <div class="video-container">{{data.iframe|safe}}</div>
-    </div>
-  </div>
+@media (min-width: 769px) {
+    .dashboard-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+</style>
 
-  <!-- Quick Actions -->
-  <div class="grid md:grid-cols-2 gap-6 mt-12">
-    <div class="card p-6 hover:scale-105 transition-transform duration-200">
-      <div class="flex items-center mb-4">
-        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mr-4">
-          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-          </svg>
+<div style="min-height: 100vh; background: #ffffff; padding: 32px;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    
+    <!-- Centered Action Cards -->
+    <div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+      <div class="dashboard-grid" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; width: 100%; max-width: 600px; align-items: end;">
+      
+      <!-- Scripts Card -->
+      <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 32px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); cursor: pointer; transition: all 0.1s ease-out;"
+           onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 rgba(0, 0, 0, 0.2)'; this.style.borderColor='#2563eb';"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)'; this.style.borderColor='#e2e8f0';">
+        
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <div style="width: 48px; height: 48px; background: #eff6ff; border: 2px solid #2563eb; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" style="color: #2563eb;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0;">Скрипты</h3>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900">Скрипты</h3>
+        
+        <p style="color: #475569; margin-bottom: 24px; line-height: 1.5;">Создавайте и управляйте bash скриптами</p>
+        
+        <form action="{% url 'api:script_list' %}" method="GET">
+          <button style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 32px; border-radius: 4px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); width: 100%; transition: all 0.1s ease-out;"
+                  type="submit"
+                  onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                  onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+            Перейти к скриптам
+          </button>
+        </form>
       </div>
-      <p class="text-gray-600 mb-4">Создавайте и управляйте отдельными bash скриптами</p>
-      <form action="{% url 'api:script_list' %}" method="GET">
-        <button class="btn-primary w-full">Перейти к скриптам</button>
-      </form>
-    </div>
 
-    <div class="card p-6 hover:scale-105 transition-transform duration-200">
-      <div class="flex items-center mb-4">
-        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mr-4">
-          <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-          </svg>
+      <!-- Templates Card -->
+      <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 32px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); cursor: pointer; transition: all 0.1s ease-out;"
+           onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 rgba(0, 0, 0, 0.2)'; this.style.borderColor='#059669';"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)'; this.style.borderColor='#e2e8f0';">
+        
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <div style="width: 48px; height: 48px; background: #f0fdf4; border: 2px solid #059669; border-radius: 4px; display: flex; align-items: center; justify-content: center;">
+            <svg width="24" height="24" style="color: #059669;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+            </svg>
+          </div>
+          <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0;">Шаблоны</h3>
         </div>
-        <h3 class="text-xl font-semibold text-gray-900">Шаблоны</h3>
+        
+        <p style="color: #475569; margin-bottom: 24px; line-height: 1.5;">Комбинируйте скрипты в шаблоны</p>
+        
+        <form action="{% url 'api:template_lis' %}" method="GET">
+          <button style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 32px; border-radius: 4px; font-size: 0.875rem; font-weight: 600; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); width: 100%; transition: all 0.1s ease-out;"
+                  type="submit"
+                  onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                  onmouseout="this.style.background='#059669'; this.style.borderColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+            Перейти к шаблонам
+          </button>
+        </form>
       </div>
-      <p class="text-gray-600 mb-4">Комбинируйте скрипты в мощные шаблоны</p>
-      <form action="{% url 'api:template_lis' %}" method="GET">
-        <button class="btn-primary w-full">Перейти к шаблонам</button>
-      </form>
     </div>
   </div>
 </div>
