@@ -36,6 +36,7 @@ urlpatterns = [
     # template
     path('template_list/', TemplateList.as_view(), name='template_lis'),
     path('template_id/<int:template_id>/', TemplateId.as_view(), name='template_id'),
+    path('template_edit/<int:template_id>/', TemplateId.as_view(), name='template_edit'),
     path('template_delete/<int:template_id>/', TemplateDelete.as_view(), name='template_delete'),
     path('template_create/', TemplateCreate.as_view(), name='template_create'),
     path('template_raw/<int:template_id>/', TemplateRaw.as_view(), name='template_raw'),

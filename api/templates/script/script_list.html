@@ -57,28 +57,58 @@ body {
       <!-- Scripts List -->
       <div style="display: flex; flex-direction: column; gap: 16px;">
         {% for script in script_list %}
-        <div class="script-item" style="display: flex; align-items: center; justify-content: space-between; padding: 24px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out; cursor: pointer;"
-             onclick="window.location.href='{% url 'api:script_id' script_id=script.id %}'"
-             onmouseover="this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
-             onmouseout="this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+        <div class="script-item" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out; overflow: hidden;">
           
-          <!-- Script Info -->
-          <div style="flex: 1;">
-            <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 4px 0;">{{script.name}}</h3>
-            <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Создан: {{script.created|date:"d.m.Y в H:i"}}</p>
-          </div>
+          <!-- Script Header -->
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 24px; cursor: pointer; transition: all 0.1s ease-out;"
+               onclick="toggleScript('{{script.id}}')"
+               onmouseover="this.style.background='#f8fafc';"
+               onmouseout="this.style.background='transparent';">
+            
+            <!-- Script Info -->
+            <div style="flex: 1;">
+              <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 4px 0;">{{script.name}}</h3>
+              <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Создан: {{script.created|date:"d.m.Y в H:i"}}</p>
+            </div>
+            
+            <!-- Expand Arrow -->
+            <svg id="arrow-{{script.id}}" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #64748b; transition: transform 0.2s ease-out; margin-right: 16px;">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
 
-          <!-- Copy Button -->
-          <div class="script-actions" style="display: flex; gap: 8px;">
-            <button onclick="event.stopPropagation(); copyToClipboard('{{script.id}}')" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
-                    title="Копировать команду"
-                    onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
-                    onmouseout="this.style.background='#059669'; this.style.borderColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
-              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-              </svg>
-            </button>
+            <!-- Action Buttons -->
+            <div class="script-actions" style="display: flex; gap: 8px;">
+              <!-- Copy Button -->
+              <button onclick="event.stopPropagation(); copyToClipboard('{{script.id}}')" 
+                      style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                      title="Скопировать команду"
+                      onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                      onmouseout="this.style.background='#059669'; this.style.borderColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                </svg>
+              </button>
+              
+              <!-- Edit Button -->
+              <button onclick="event.stopPropagation(); window.location.href='{% url 'api:script_id' script_id=script.id %}';" 
+                      style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #64748b; outline: none; background: #64748b; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                      title="Редактировать скрипт"
+                      onmouseover="this.style.background='#475569'; this.style.borderColor='#475569'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                      onmouseout="this.style.background='#64748b'; this.style.borderColor='#64748b'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Script Content (Hidden by default) -->
+          <div id="content-{{script.id}}" style="display: none; border-top: 2px solid #e2e8f0; background: #f8fafc;">
+            <div style="padding: 24px;">
+              <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 16px;">
+                <pre style="font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.75rem; line-height: 1.5; color: #0f172a; margin: 0; white-space: pre-wrap; word-wrap: break-word;">{{script.text}}</pre>
+              </div>
+            </div>
           </div>
         </div>
         {% endfor %}
@@ -115,6 +145,39 @@ body {
 </div>
 
 <script>
+    let currentExpandedScript = null;
+    
+    // Toggle script expansion
+    function toggleScript(scriptId) {
+        const content = document.getElementById('content-' + scriptId);
+        const arrow = document.getElementById('arrow-' + scriptId);
+        
+        if (!content || !arrow) return;
+        
+        // If clicking on the currently expanded script, just collapse it
+        if (currentExpandedScript === scriptId) {
+            content.style.display = 'none';
+            arrow.style.transform = 'rotate(0deg)';
+            currentExpandedScript = null;
+            return;
+        }
+        
+        // Collapse the previously expanded script if any
+        if (currentExpandedScript) {
+            const prevContent = document.getElementById('content-' + currentExpandedScript);
+            const prevArrow = document.getElementById('arrow-' + currentExpandedScript);
+            if (prevContent && prevArrow) {
+                prevContent.style.display = 'none';
+                prevArrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Expand the clicked script
+        content.style.display = 'block';
+        arrow.style.transform = 'rotate(180deg)';
+        currentExpandedScript = scriptId;
+    }
+    
     function copyToClipboard(script_id) {
         const textToCopy = "wget https://{{request.get_host}}/script_raw/" + script_id + "/ -O script_" + script_id + ".sh && chmod +x script_" + script_id + ".sh && ./script_" + script_id + ".sh";
         

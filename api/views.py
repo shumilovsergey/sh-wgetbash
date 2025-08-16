@@ -193,7 +193,37 @@ class TemplateId(View):
             return render(request, "info.html", {"info":info})
         
         template = Templates.objects.get(id=template_id)
-        return render(request, 'template/template_id.html', {"template":template, "host_dns":HOST_DNS})
+        session_id = request.session["session_id"]        
+        user = TelegramUsers.objects.get(session_id=session_id)
+        tg_id = user.tg_id
+        all_scripts = Scripts.objects.filter(author=tg_id)
+        return render(request, 'template/template_id.html', {"template":template, "all_scripts":all_scripts, "host_dns":HOST_DNS})
+    
+    def post(self, request, template_id):
+        if not Templates.objects.filter(id=template_id).exists():
+            return JsonResponse({"status": "error", "message": "Template not found"})
+        
+        data = json.loads(request.body)
+        template_name = data.get('template_name')
+        script_list = data.get('script_list')
+        
+        session_id = request.session["session_id"]
+        user = TelegramUsers.objects.get(session_id=session_id)
+        template = Templates.objects.get(id=template_id)
+        
+        if user != template.author:
+            return JsonResponse({"status": "error", "message": "Permission denied"})
+        
+        template.name = template_name
+        template.scripts.clear()
+        
+        for script_id in script_list:
+            if Scripts.objects.filter(id=script_id).exists():
+                script = Scripts.objects.get(id=script_id)
+                template.scripts.add(script)
+        
+        template.save()
+        return JsonResponse({"status": "success"})
     
 class TemplateDelete(View):
     def post(self, request, template_id):
