@@ -12,7 +12,6 @@ This is a Django web application that generates bash scripts for system automati
 - **api**: Main application handling script and template management, user sessions, and web views
 - **bot**: Telegram bot integration for user authentication
 - **server**: Django project configuration and settings
-- **theme**: Tailwind CSS theme application for frontend styling
 
 ### Key Models (api/models.py)
 - `TelegramUsers`: User management linked to Telegram accounts
@@ -50,11 +49,10 @@ python manage.py shell
 ```
 
 ### Frontend Development
-The application uses custom CSS with optional Tailwind CSS support:
-- Main stylesheet: `api/static/css/styles.css` - Modern dark minimal design
+The application now uses custom CSS instead of Tailwind CSS:
+- Main stylesheet: `api/static/css/styles.css` - Modern light angular design
 - JavaScript enhancements: `api/static/js/app.js` - Interactive features
-- Tailwind CSS build (optional): `npm run dev` or `npm run build` in `theme/static_src/`
-- No build process required for custom CSS - served directly
+- No build process required - CSS and JS are served directly
 
 ### Quick Development Setup
 ```bash
@@ -129,10 +127,8 @@ The project does not include explicit test commands or linting configuration. Wh
 ## Dependency Management
 
 Python dependencies are installed via pip in the Dockerfile and `run_dev.sh`:
-- Core: Django, DRF, CORS headers, dotenv, requests
-- Optional: django-tailwind integration
+- Core: Django, DRF, CORS headers, dotenv, requests, markdown
 - No requirements.txt file exists - dependencies are managed in Dockerfile
-- For Tailwind CSS: use npm commands in `theme/static_src/` directory
 - Development script automatically handles virtual environment and dependencies
 
 ## Docker Configuration

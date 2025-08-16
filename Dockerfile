@@ -14,8 +14,7 @@ RUN pip3 install python-dotenv
 RUN pip3 install django-cors-headers
 RUN pip3 install requests
 RUN pip3 install dataclasses-serialization
-RUN pip3 install django-tailwind
-RUN pip3 install 'django-tailwind[reload]'
+RUN pip3 install markdown
 
 
 EXPOSE 8000
