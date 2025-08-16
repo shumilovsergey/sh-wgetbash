@@ -4,6 +4,7 @@ from .views import Main
 from .views import Login
 from .views import Logout
 from .views import AuthCheck
+from .views import Info
 
 from .views import ScriptList
 from .views import ScriptId
@@ -27,6 +28,7 @@ urlpatterns = [
     path('login/', Login.as_view(), name='login'),
     path('logout/', Logout.as_view(), name='logout'),
     path('auth_check/', AuthCheck.as_view(), name='auth_check'),
+    path('info/', Info.as_view(), name='info'),
     # script
     path('script_list/', ScriptList.as_view(), name='script_list'),
     path('script_id/<int:script_id>/', ScriptId.as_view(), name='script_id'),

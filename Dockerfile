@@ -17,6 +17,7 @@ RUN pip3 install dataclasses-serialization
 RUN pip3 install django-tailwind
 RUN pip3 install 'django-tailwind[reload]'
 
+
 EXPOSE 8000
 
 CMD ["sh", "-c", "\

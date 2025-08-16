@@ -5,20 +5,165 @@
 {% block content %}
 {% load static %}
 
-<div class="max-w-2xl mx-auto">
-    <div class="card p-8 text-center">
-        <svg class="w-16 h-16 text-blue-600 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <h1 class="text-2xl font-bold text-gray-900 mb-4">Информация</h1>
-        <p class="text-lg text-gray-700 mb-6">{{info}}</p>
-        <a href="{% url 'api:main' %}" class="btn-primary">
-            <svg class="w-4 h-4 inline mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-            </svg>
-            На главную
-        </a>
+<style>
+/* Ensure light theme for info page */
+body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .info-container {
+        padding: 16px !important;
+    }
+    
+    .info-content {
+        padding: 24px !important;
+    }
+}
+
+/* Markdown content styling */
+.markdown-content {
+    line-height: 1.7;
+}
+
+.markdown-content h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 24px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.markdown-content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 32px 0 16px 0;
+}
+
+.markdown-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0f172a;
+    margin: 24px 0 12px 0;
+}
+
+.markdown-content p {
+    color: #475569;
+    margin: 0 0 16px 0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    color: #475569;
+    margin: 0 0 16px 0;
+    padding-left: 24px;
+}
+
+.markdown-content li {
+    margin: 4px 0;
+}
+
+.markdown-content code {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace;
+    font-size: 0.875rem;
+    color: #0f172a;
+}
+
+.markdown-content pre {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.markdown-content pre code {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 0.75rem;
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid #2563eb;
+    background: #eff6ff;
+    padding: 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.markdown-content blockquote p {
+    margin: 0;
+    color: #1e40af;
+}
+
+.markdown-content a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.markdown-content a:hover {
+    text-decoration: underline;
+}
+
+.markdown-content strong {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.markdown-content em {
+    font-style: italic;
+    color: #475569;
+}
+
+.markdown-content hr {
+    border: none;
+    border-top: 2px solid #e2e8f0;
+    margin: 32px 0;
+}
+</style>
+
+<div class="info-container" style="min-height: 100vh; background: #ffffff; padding: 32px;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    
+    <!-- Header -->
+    <div style="margin-bottom: 32px;">
+      <h1 style="font-size: 2rem; font-weight: 700; color: #0f172a; margin: 0 0 8px 0;">Информация</h1>
+      <p style="font-size: 0.875rem; color: #64748b; margin: 0;">Документация и информация о проекте WgetBash</p>
     </div>
+
+    <!-- Content -->
+    <div class="info-content" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 32px; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); margin-bottom: 24px;">
+      <div class="markdown-content">
+        {{ readme_content|safe }}
+      </div>
+    </div>
+
+    <!-- Back Button -->
+    <div style="text-align: center;">
+      <a href="{% url 'api:main' %}" 
+         style="display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 32px; border-radius: 4px; font-size: 0.875rem; font-weight: 600; text-decoration: none; cursor: pointer; border: 2px solid #e2e8f0; outline: none; background: #ffffff; color: #475569; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+         title="Назад к главной"
+         onmouseover="this.style.background='#f1f5f9'; this.style.color='#0f172a'; this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+         onmouseout="this.style.background='#ffffff'; this.style.color='#475569'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        Назад к главной
+      </a>
+    </div>
+
+  </div>
 </div>
 
 {% endblock %}

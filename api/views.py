@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.http import HttpResponse
 import json
+import os
+import markdown
 from django.views.decorators.csrf import csrf_exempt
 
 from server.const import BOT_NAME
@@ -61,6 +63,25 @@ class Logout(View):
         request.session["auth"]=None
         request.session["name"]=None
         return redirect("/")
+
+class Info(View):
+    def get(self, request):
+        # Read README.md file
+        readme_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'README.md')
+        
+        try:
+            with open(readme_path, 'r', encoding='utf-8') as file:
+                readme_content = file.read()
+            
+            # Convert markdown to HTML using the markdown library
+            html_content = markdown.markdown(readme_content, extensions=['extra', 'codehilite', 'toc'])
+            
+        except FileNotFoundError:
+            html_content = '<p>README.md файл не найден.</p>'
+        except Exception as e:
+            html_content = f'<p>Ошибка при чтении файла: {str(e)}</p>'
+        
+        return render(request, 'info.html', {"readme_content": html_content})
     
 # script
 
