@@ -12,18 +12,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
-<body class="min-h-screen">
-    {% if request.session.auth %}
+<body style="margin: 0; padding: 0; min-height: 100vh; background: #ffffff; color: #0f172a; overflow-x: hidden;">
     <style>
-    /* Light navigation theme */
-    body {
+    /* Global overflow and layout fixes */
+    * {
+        box-sizing: border-box;
+    }
+    
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow-x: hidden !important;
         background: #ffffff !important;
         color: #0f172a !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
     </style>
     
+    {% if request.session.auth %}
+    
     <!-- Simplified Navigation Header -->
-    <div style="width: 100%; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); padding: 16px 32px; margin: 16px; margin-bottom: 32px;">
+    <div style="width: calc(100% - 32px); background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); padding: 16px 32px; margin: 16px; margin-bottom: 32px;">
         <div style="display: flex; align-items: center; justify-content: space-between; max-width: 1200px; margin: 0 auto;">
             
             <!-- User Name -->
