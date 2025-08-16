@@ -29,6 +29,7 @@ This is a Django web application that generates bash scripts for system automati
 - Scripts are wrapped with bash headers and separators (defined in server/const.py)
 - Templates combine multiple scripts into a single downloadable bash file
 - Raw script downloads include proper bash shebang and completion messages
+- Self-cleaning scripts: Downloaded scripts automatically delete themselves after execution
 
 ## Development Commands
 

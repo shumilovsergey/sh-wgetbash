@@ -11,6 +11,16 @@ BOT_NAME = os.getenv("BOT_NAME")
 
 BASH_BEGINING = "#!/bin/bash\n"
 BASH_SPLITER = "\necho \"----------------------------------------------------------------\""
+# BASH_END = "\necho \"----------------------------------------------------------------\"\necho \"Cleaning up...\"\nrm -f \"$0\"\necho \"Script completed and removed.\""
+
+BASH_END = (
+    '\necho "----------------------------------------------------------------"'
+    '\necho "Cleaning up..."'
+    '\nrm -f "$0"'
+    '\nprintf "\e[32mScript completed and removed.\e[0m\n"'
+)
+
+
 
 #BUTTONS
 

@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from server.const import BOT_NAME
 from server.const import BASH_BEGINING
 from server.const import BASH_SPLITER
+from server.const import BASH_END
 from server.const import HOST_DNS
 
 from .models import TelegramUsers
@@ -159,9 +160,10 @@ class ScriptRaw(View):
             return render(request, 'info.html', {"info":info})
         
         script = Scripts.objects.get(id=script_id)
-        raw_script_name = f"\necho \"complited {script.name} \" "
-        raw = BASH_BEGINING + "\n" + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
+        raw_script_name = f'\nprintf "\e[32mcomplited {script.name}\e[0m\n"'
 
+        raw = BASH_BEGINING + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER + BASH_END
+  
         response = HttpResponse(raw.encode('utf-8'), content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=script_raw.sh'
         return response
@@ -273,9 +275,11 @@ class TemplateRaw(View):
         template_raw = BASH_BEGINING
 
         for script in template.scripts.all():
-            raw_script_name = f"\necho \"complited {script.name} \" "
+            raw_script_name = f'\nprintf "\e[32mcomplited {script.name}\e[0m\n"'
             raw_script_text = "\n" + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
             template_raw = template_raw + raw_script_text
+
+        template_raw = template_raw + BASH_END
 
         response = HttpResponse(template_raw.encode('utf-8'), content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=template_raw.sh'
