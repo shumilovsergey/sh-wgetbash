@@ -81,19 +81,27 @@ body {
           {% for script in template.scripts.all %}
           <div id="template-script-{{script.id}}" class="template-script" data-script-id="{{script.id}}" style="background: #f0fdf4; border: 2px solid #059669; border-radius: 4px; transition: all 0.1s ease-out; overflow: hidden;">
             <!-- Script Header -->
-            <div style="padding: 16px; cursor: pointer; transition: all 0.1s ease-out;"
-                 onclick="toggleScript('{{script.id}}')"
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; cursor: pointer; transition: all 0.1s ease-out;"
+                 onclick="moveToAvailable('{{script.id}}')"
                  onmouseover="this.style.background='#dcfce7';"
                  onmouseout="this.style.background='transparent';">
-              <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div style="flex: 1;" onclick="event.stopPropagation(); moveToAvailable('{{script.id}}');">
-                  <h4 style="font-weight: 600; font-size: 0.875rem; color: #0f172a; margin: 0 0 4px 0;">{{script.name}}</h4>
-                  <p style="font-size: 0.75rem; color: #64748b; margin: 0;">Создан: {{script.created|date:"d.m.Y"}}</p>
-                </div>
-                <svg id="arrow-{{script.id}}" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #059669; transition: transform 0.2s ease-out;">
+              
+              <!-- Script Info -->
+              <div style="flex: 1;">
+                <h4 style="font-weight: 600; font-size: 0.875rem; color: #0f172a; margin: 0 0 4px 0;">{{script.name}}</h4>
+                <p style="font-size: 0.75rem; color: #64748b; margin: 0;">Создан: {{script.created|date:"d.m.Y"}}</p>
+              </div>
+
+              <!-- Expand Button -->
+              <button onclick="event.stopPropagation(); toggleScript('{{script.id}}')" 
+                      style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                      title="Показать содержимое"
+                      onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                      onmouseout="this.style.background='#059669'; this.style.borderColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+                <svg id="arrow-{{script.id}}" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.2s ease-out;">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
-              </div>
+              </button>
             </div>
             
             <!-- Script Content (Hidden by default) -->
@@ -231,19 +239,27 @@ body {
         div.style.cssText = `background: ${bgColor}; border: 2px solid ${borderColor}; border-radius: 4px; transition: all 0.1s ease-out; overflow: hidden;`;
         
         div.innerHTML = `
-            <div style="padding: 16px; cursor: pointer; transition: all 0.1s ease-out;"
-                 onclick="toggleScript('${script.id}')"
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; cursor: pointer; transition: all 0.1s ease-out;"
+                 onclick="${clickAction}"
                  onmouseover="this.style.background='${hoverBg}';"
                  onmouseout="this.style.background='transparent';">
-              <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div style="flex: 1;" onclick="event.stopPropagation(); ${clickAction}">
-                  <h4 style="font-weight: 600; font-size: 0.875rem; color: #0f172a; margin: 0 0 4px 0;">${script.name}</h4>
-                  <p style="font-size: 0.75rem; color: #64748b; margin: 0;">Создан: ${script.created}</p>
-                </div>
-                <svg id="arrow-${script.id}" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: ${borderColor}; transition: transform 0.2s ease-out;">
+              
+              <!-- Script Info -->
+              <div style="flex: 1;">
+                <h4 style="font-weight: 600; font-size: 0.875rem; color: #0f172a; margin: 0 0 4px 0;">${script.name}</h4>
+                <p style="font-size: 0.75rem; color: #64748b; margin: 0;">Создан: ${script.created}</p>
+              </div>
+
+              <!-- Expand Button -->
+              <button onclick="event.stopPropagation(); toggleScript('${script.id}')" 
+                      style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; border: 2px solid ${borderColor}; outline: none; background: ${borderColor}; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                      title="Показать содержимое"
+                      onmouseover="this.style.background='${type === 'template' ? '#047857' : '#475569'}'; this.style.borderColor='${type === 'template' ? '#047857' : '#475569'}'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                      onmouseout="this.style.background='${borderColor}'; this.style.borderColor='${borderColor}'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+                <svg id="arrow-${script.id}" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.2s ease-out;">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                 </svg>
-              </div>
+              </button>
             </div>
             <div id="content-${script.id}" style="display: none; border-top: 2px solid ${borderColor}; background: #ffffff;">
               <div style="padding: 16px;">
