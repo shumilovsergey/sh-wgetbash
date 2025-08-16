@@ -71,19 +71,7 @@ body {
       <div style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; padding: 24px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);">
         <h3 style="font-size: 1.125rem; font-weight: 600; color: #0f172a; margin: 0 0 16px 0;">Доступные скрипты</h3>
         <div id="menu-items" style="display: flex; flex-direction: column; gap: 8px; min-height: 300px;">
-          {% for script in script_list %}
-          <button 
-            class="menu-item" 
-            value="{{script.id}}" 
-            onclick="moveToOrder(this)"
-            style="width: 100%; text-align: left; padding: 16px; background: #ffffff; border: 2px solid #e2e8f0; border-radius: 4px; color: #0f172a; cursor: pointer; transition: all 0.1s ease-out; outline: none;"
-            onmouseover="this.style.background='#f1f5f9'; this.style.borderColor='#2563eb'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';"
-            onmouseout="this.style.background='#ffffff'; this.style.borderColor='#e2e8f0'; this.style.boxShadow='none';"
-          >
-            <div style="font-weight: 600; font-size: 0.875rem; margin-bottom: 4px;">{{script.name}}</div>
-            <div style="font-size: 0.75rem; color: #64748b;">Создан: {{script.created|date:"d.m.Y"}}</div>
-          </button>
-          {% endfor %}
+          <!-- Available scripts will be populated by JavaScript -->
         </div>
       </div>
 
@@ -152,91 +140,148 @@ body {
 </div>
 
 <script>
-    function moveToOrder(menuItem) {
-        const orderContainer = document.getElementById('order-items');
-        const emptyState = document.getElementById('empty-state');
+    // Script data management - same as edit template page
+    const allScripts = [
+        {% for script in script_list %}
+        {
+            id: "{{script.id}}",
+            name: "{{script.name}}",
+            created: "{{script.created|date:'d.m.Y'}}",
+            text: `{{script.text|escapejs}}`
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    ];
+    
+    let templateScripts = []; // Scripts currently in template
+    let currentExpandedScript = null;
+    
+    // Initialize available scripts on page load
+    function initializeAvailableScripts() {
+        const availableContainer = document.getElementById('menu-items');
         
-        // Hide empty state if it exists
-        if (emptyState) {
-            emptyState.style.display = 'none';
+        if (allScripts.length === 0) {
+            availableContainer.innerHTML = '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #64748b; text-align: center;"><p style="font-size: 0.875rem; margin: 0;">Нет доступных скриптов</p></div>';
+            return;
         }
         
-        const orderItem = document.createElement('button');
-        orderItem.className = 'order-item';
-        orderItem.innerHTML = menuItem.innerHTML;
-        orderItem.value = menuItem.value;
-        orderItem.onclick = () => moveToMenu(orderItem);
+        availableContainer.innerHTML = '';
+        allScripts.forEach(script => {
+            const scriptElement = createScriptElement(script, 'available');
+            availableContainer.appendChild(scriptElement);
+        });
+    }
+    
+    // Create script element - same as edit template page
+    function createScriptElement(script, type) {
+        const div = document.createElement('div');
+        div.id = `${type}-script-${script.id}`;
+        div.className = `${type}-script`;
+        div.setAttribute('data-script-id', script.id);
         
-        // Style the order item
-        orderItem.style.cssText = `
-            width: 100%; 
-            text-align: left; 
-            padding: 16px; 
-            background: #f0fdf4; 
-            border: 2px solid #059669; 
-            border-radius: 4px; 
-            color: #0f172a; 
-            cursor: pointer; 
-            transition: all 0.1s ease-out; 
-            outline: none;
+        const bgColor = type === 'available' ? '#ffffff' : '#f0fdf4';
+        const borderColor = type === 'available' ? '#e2e8f0' : '#059669';
+        const hoverBg = type === 'available' ? '#f1f5f9' : '#dcfce7';
+        const clickAction = type === 'available' ? `moveToTemplate('${script.id}')` : `moveToAvailable('${script.id}')`;
+        
+        div.style.cssText = `background: ${bgColor}; border: 2px solid ${borderColor}; border-radius: 4px; transition: all 0.1s ease-out; overflow: hidden;`;
+        
+        div.innerHTML = `
+            <div style="display: flex; align-items: center; justify-content: space-between; padding: 16px; cursor: pointer; transition: all 0.1s ease-out;"
+                 onclick="${clickAction}"
+                 onmouseover="this.style.background='${hoverBg}';"
+                 onmouseout="this.style.background='transparent';">
+              
+              <!-- Script Info -->
+              <div style="flex: 1;">
+                <h4 style="font-weight: 600; font-size: 0.875rem; color: #0f172a; margin: 0 0 4px 0;">${script.name}</h4>
+                <p style="font-size: 0.75rem; color: #64748b; margin: 0;">Создан: ${script.created}</p>
+              </div>
+
+              <!-- Expand Button -->
+              <button onclick="event.stopPropagation(); toggleScript('${script.id}')" 
+                      style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; border: 2px solid ${borderColor}; outline: none; background: ${borderColor}; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                      title="Показать содержимое"
+                      onmouseover="this.style.background='${type === 'template' ? '#047857' : '#475569'}'; this.style.borderColor='${type === 'template' ? '#047857' : '#475569'}'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                      onmouseout="this.style.background='${borderColor}'; this.style.borderColor='${borderColor}'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+                <svg id="arrow-${script.id}" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.2s ease-out;">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+            </div>
+            <div id="content-${script.id}" style="display: none; border-top: 2px solid ${borderColor}; background: #ffffff;">
+              <div style="padding: 16px;">
+                <div style="background: #f8fafc; border: 2px solid #e2e8f0; border-radius: 4px; padding: 16px;">
+                  <pre style="font-family: 'JetBrains Mono', 'Fira Code', 'Monaco', 'Consolas', monospace; font-size: 0.75rem; line-height: 1.5; color: #0f172a; margin: 0; white-space: pre-wrap; word-wrap: break-word;">${script.text}</pre>
+                </div>
+              </div>
+            </div>
         `;
         
-        orderItem.onmouseover = function() {
-            this.style.background = '#dcfce7';
-            this.style.borderColor = '#047857';
-            this.style.boxShadow = '0 2px 0 rgba(0, 0, 0, 0.1)';
-        };
+        return div;
+    }
+
+    // Move script to template
+    function moveToTemplate(scriptId) {
+        const script = allScripts.find(s => s.id === scriptId);
+        if (!script) return;
         
-        orderItem.onmouseout = function() {
-            this.style.background = '#f0fdf4';
-            this.style.borderColor = '#059669';
-            this.style.boxShadow = 'none';
-        };
+        // Remove from available
+        const availableElement = document.getElementById(`available-script-${scriptId}`);
+        if (availableElement) availableElement.remove();
         
-        orderContainer.appendChild(orderItem);
-        menuItem.remove();
+        // Add to template
+        const templateContainer = document.getElementById('order-items');
+        const emptyState = document.getElementById('empty-state');
+        if (emptyState) emptyState.remove();
+        
+        const scriptElement = createScriptElement(script, 'template');
+        templateContainer.appendChild(scriptElement);
+        
+        // Update template scripts array
+        templateScripts.push(scriptId);
+        
+        // Check if available scripts is empty
+        const availableContainer = document.getElementById('menu-items');
+        if (availableContainer.children.length === 0) {
+            availableContainer.innerHTML = '<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 300px; color: #64748b; text-align: center;"><p style="font-size: 0.875rem; margin: 0;">Все скрипты уже добавлены в шаблон</p></div>';
+        }
+    }
+    
+    // Move script to available
+    function moveToAvailable(scriptId) {
+        const script = allScripts.find(s => s.id === scriptId);
+        if (!script) return;
+        
+        // Remove from template
+        const templateElement = document.getElementById(`template-script-${scriptId}`);
+        if (templateElement) templateElement.remove();
+        
+        // Add to available
+        const availableContainer = document.getElementById('menu-items');
+        if (availableContainer.innerHTML.includes('Все скрипты уже добавлены')) {
+            availableContainer.innerHTML = '';
+        }
+        
+        const scriptElement = createScriptElement(script, 'available');
+        availableContainer.appendChild(scriptElement);
+        
+        // Update template scripts array
+        const index = templateScripts.indexOf(scriptId);
+        if (index > -1) templateScripts.splice(index, 1);
         
         updateEmptyState();
     }
 
+    // Legacy function for backward compatibility with HTML onclick
+    function moveToOrder(menuItem) {
+        const scriptId = menuItem.getAttribute('value');
+        moveToTemplate(scriptId);
+    }
+
+    // Legacy function for backward compatibility
     function moveToMenu(orderItem) {
-        const menuContainer = document.getElementById('menu-items');
-        const menuItem = document.createElement('button');
-        menuItem.className = 'menu-item';
-        menuItem.innerHTML = orderItem.innerHTML;
-        menuItem.value = orderItem.value;
-        menuItem.onclick = () => moveToOrder(menuItem);
-        
-        // Style the menu item
-        menuItem.style.cssText = `
-            width: 100%; 
-            text-align: left; 
-            padding: 16px; 
-            background: #ffffff; 
-            border: 2px solid #e2e8f0; 
-            border-radius: 4px; 
-            color: #0f172a; 
-            cursor: pointer; 
-            transition: all 0.1s ease-out; 
-            outline: none;
-        `;
-        
-        menuItem.onmouseover = function() {
-            this.style.background = '#f1f5f9';
-            this.style.borderColor = '#2563eb';
-            this.style.boxShadow = '0 2px 0 rgba(0, 0, 0, 0.1)';
-        };
-        
-        menuItem.onmouseout = function() {
-            this.style.background = '#ffffff';
-            this.style.borderColor = '#e2e8f0';
-            this.style.boxShadow = 'none';
-        };
-        
-        menuContainer.appendChild(menuItem);
-        orderItem.remove();
-        
-        updateEmptyState();
+        const scriptId = orderItem.getAttribute('data-script-id') || orderItem.value;
+        moveToAvailable(scriptId);
     }
     
     function updateEmptyState() {
@@ -249,9 +294,39 @@ body {
         }
     }
 
+    // Toggle script expansion
+    function toggleScript(scriptId) {
+        const content = document.getElementById('content-' + scriptId);
+        const arrow = document.getElementById('arrow-' + scriptId);
+        
+        if (!content || !arrow) return;
+        
+        // If clicking on the currently expanded script, just collapse it
+        if (currentExpandedScript === scriptId) {
+            content.style.display = 'none';
+            arrow.style.transform = 'rotate(0deg)';
+            currentExpandedScript = null;
+            return;
+        }
+        
+        // Collapse the previously expanded script if any
+        if (currentExpandedScript) {
+            const prevContent = document.getElementById('content-' + currentExpandedScript);
+            const prevArrow = document.getElementById('arrow-' + currentExpandedScript);
+            if (prevContent && prevArrow) {
+                prevContent.style.display = 'none';
+                prevArrow.style.transform = 'rotate(0deg)';
+            }
+        }
+        
+        // Expand the clicked script
+        content.style.display = 'block';
+        arrow.style.transform = 'rotate(180deg)';
+        currentExpandedScript = scriptId;
+    }
+
     document.getElementById('order-btn').onclick = () => {
-        const orderItems = document.querySelectorAll('#order-items .order-item');
-        const scriptList = Array.from(orderItems).map(item => item.value);
+        const scriptList = templateScripts;
         const templateName = document.getElementById('template_name').value;
 
         if ((templateName.length > 0 && templateName.length < 56) && (scriptList.length > 0)) {
@@ -311,6 +386,11 @@ body {
         }
         return cookieValue;
     }
+    
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeAvailableScripts();
+    });
 </script>
 
 <style>

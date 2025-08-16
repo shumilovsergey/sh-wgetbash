@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a Django web application that generates bash scripts for system automation. The platform allows users to create, manage, and combine bash scripts into templates that can be downloaded as executable files. It integrates with Telegram for user authentication and features a Tailwind CSS-styled frontend.
+This is a Django web application that generates bash scripts for system automation. The platform allows users to create, manage, and combine bash scripts into templates that can be downloaded as executable files. It integrates with Telegram for user authentication and features a modern light angular CSS design.
 
 ## Architecture
 
@@ -50,23 +50,19 @@ python manage.py shell
 ```
 
 ### Frontend Development
-The application now uses custom CSS instead of Tailwind CSS:
-- Main stylesheet: `api/static/css/styles.css` - Modern light angular design
+The application uses custom CSS with a modern light angular design:
+- Main stylesheet: `api/static/css/styles.css` - Modern light angular design with 8px grid system
 - JavaScript enhancements: `api/static/js/app.js` - Interactive features
 - No build process required - CSS and JS are served directly
 
 ### Quick Development Setup
 ```bash
-# Use the provided development script (recommended)
-chmod +x run_dev.sh
-./run_dev.sh
-
-# Manual setup alternative
+# Manual setup for local development
 python3 -m venv venv
 source venv/bin/activate
-pip install django python-dotenv djangorestframework django-cors-headers requests
-python manage.py makemigrations && python manage.py migrate
-python manage.py runserver 0.0.0.0:8990
+pip install django python-dotenv djangorestframework django-cors-headers requests dataclasses-serialization markdown
+python manage.py makemigrations api && python manage.py migrate
+python manage.py runserver 0.0.0.0:8000
 ```
 
 ### Docker Development
@@ -127,10 +123,10 @@ The project does not include explicit test commands or linting configuration. Wh
 
 ## Dependency Management
 
-Python dependencies are installed via pip in the Dockerfile and `run_dev.sh`:
-- Core: Django, DRF, CORS headers, dotenv, requests, markdown
+Python dependencies are installed via pip in the Dockerfile:
+- Core: Django, DRF, CORS headers, dotenv, requests, dataclasses-serialization, markdown
 - No requirements.txt file exists - dependencies are managed in Dockerfile
-- Development script automatically handles virtual environment and dependencies
+- For local development, dependencies must be installed manually in virtual environment
 
 ## Docker Configuration
 
@@ -139,7 +135,7 @@ The application is containerized with:
 - Auto-migration and superuser creation on startup (admin/admin)
 - Exposed on port 8000 internally, mapped to 5008 externally via docker-compose
 - Pre-built image available at ghcr.io/shumilovsergey/wgetbash:latest
-- Development server runs on port 8990 when using `run_dev.sh`
+- Local development server typically runs on port 8000
 
 ## Key Implementation Details
 
