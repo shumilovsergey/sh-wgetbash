@@ -71,14 +71,14 @@ body {
 
           <!-- Action Buttons (Right Side) -->
           <div class="script-actions" style="display: flex; gap: 8px; align-items: center;">
-            <!-- Expand Button -->
-            <button onclick="event.stopPropagation(); toggleScript('{{script.id}}')" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #64748b; outline: none; background: #64748b; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
-                    title="Показать содержимое"
-                    onmouseover="this.style.background='#475569'; this.style.borderColor='#475569'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
-                    onmouseout="this.style.background='#64748b'; this.style.borderColor='#64748b'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
-              <svg id="arrow-{{script.id}}" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.2s ease-out;">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            <!-- Delete Button -->
+            <button onclick="event.stopPropagation(); confirmDelete('{{script.id}}')" 
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #dc2626; outline: none; background: #dc2626; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                    title="Удалить скрипт"
+                    onmouseover="this.style.background='#b91c1c'; this.style.borderColor='#b91c1c'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                    onmouseout="this.style.background='#dc2626'; this.style.borderColor='#dc2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
               </svg>
             </button>
             
@@ -93,14 +93,14 @@ body {
               </svg>
             </button>
             
-            <!-- Delete Button -->
-            <button onclick="event.stopPropagation(); confirmDelete('{{script.id}}')" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #dc2626; outline: none; background: #dc2626; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
-                    title="Удалить скрипт"
-                    onmouseover="this.style.background='#b91c1c'; this.style.borderColor='#b91c1c'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
-                    onmouseout="this.style.background='#dc2626'; this.style.borderColor='#dc2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
-              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+            <!-- Expand Button -->
+            <button onclick="event.stopPropagation(); toggleScript('{{script.id}}')" 
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #64748b; outline: none; background: #64748b; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                    title="Показать содержимое"
+                    onmouseover="this.style.background='#475569'; this.style.borderColor='#475569'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                    onmouseout="this.style.background='#64748b'; this.style.borderColor='#64748b'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+              <svg id="arrow-{{script.id}}" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transition: transform 0.2s ease-out;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
               </svg>
             </button>
           </div>

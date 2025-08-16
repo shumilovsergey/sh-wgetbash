@@ -69,6 +69,17 @@ body {
 
           <!-- Action Buttons -->
           <div class="template-actions" style="display: flex; gap: 8px;">
+            <!-- Delete Button -->
+            <button onclick="event.stopPropagation(); confirmDelete('{{template.id}}')" 
+                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #dc2626; outline: none; background: #dc2626; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
+                    title="Удалить шаблон"
+                    onmouseover="this.style.background='#b91c1c'; this.style.borderColor='#b91c1c'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
+                    onmouseout="this.style.background='#dc2626'; this.style.borderColor='#dc2626'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+              </svg>
+            </button>
+            
             <!-- Copy Button -->
             <button onclick="event.stopPropagation(); copyToClipboard('{{template.id}}')" 
                     style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
@@ -77,18 +88,6 @@ body {
                     onmouseout="this.style.background='#059669'; this.style.borderColor='#059669'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
               <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
-              </svg>
-            </button>
-            
-            <!-- View Button -->
-            <button onclick="event.stopPropagation(); window.location.href='{% url 'api:template_id' template_id=template.id %}';" 
-                    style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #64748b; outline: none; background: #64748b; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
-                    title="Просмотр шаблона"
-                    onmouseover="this.style.background='#475569'; this.style.borderColor='#475569'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
-                    onmouseout="this.style.background='#64748b'; this.style.borderColor='#64748b'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 0 rgba(0, 0, 0, 0.1)';">
-              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
               </svg>
             </button>
           </div>
@@ -154,6 +153,41 @@ body {
         setTimeout(function() {
             alertBox.style.display = 'none';
         }, 3000);
+    }
+    
+    function confirmDelete(templateId) {
+        if (confirm('Вы уверены, что хотите удалить этот шаблон?')) {
+            // Create a form dynamically and submit it
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/template_delete/' + templateId + '/';
+            form.style.display = 'none';
+            
+            // Add CSRF token
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrfmiddlewaretoken';
+            csrfToken.value = getCookie('csrftoken');
+            form.appendChild(csrfToken);
+            
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
+    
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
     }
 </script>
 
