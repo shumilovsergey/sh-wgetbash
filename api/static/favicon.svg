@@ -1,0 +1,21 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Terminal window background -->
+  <rect x="2" y="2" width="28" height="28" rx="4" fill="#ffffff" stroke="#2563eb" stroke-width="2"/>
+  
+  <!-- Terminal header bar -->
+  <rect x="4" y="4" width="24" height="6" rx="2" fill="#2563eb"/>
+  
+  <!-- Terminal dots -->
+  <circle cx="7" cy="7" r="1" fill="#ffffff"/>
+  <circle cx="10" cy="7" r="1" fill="#ffffff"/>
+  <circle cx="13" cy="7" r="1" fill="#ffffff"/>
+  
+  <!-- Bash prompt symbol ">" -->
+  <path d="M6 16 L10 20 L6 24" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Command line -->
+  <rect x="12" y="19" width="12" height="2" rx="1" fill="#2563eb"/>
+  
+  <!-- Optional second command line for more terminal feel -->
+  <rect x="12" y="23" width="8" height="2" rx="1" fill="#cbd5e1"/>
+</svg>
