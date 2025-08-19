@@ -35,8 +35,8 @@
 
 1. Склонируйте репозиторий:  
    ```bash
-   git clone https://github.com/username/wgetbash.git
-   cd wgetbash
+   gh repo clone shumilovsergey/sh-wgetbash
+   cd sh-wgetbash
    ```
 
 2. Создайте файл окружения .env и добавьте туда переменные:
