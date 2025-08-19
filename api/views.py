@@ -8,9 +8,8 @@ import markdown
 from django.views.decorators.csrf import csrf_exempt
 
 from server.const import BOT_NAME
-from server.const import BASH_BEGINING
+from server.const import BASH_BEGIN
 from server.const import BASH_SPLITER
-from server.const import BASH_END
 from server.const import HOST_DNS
 
 from .models import TelegramUsers
@@ -162,7 +161,13 @@ class ScriptRaw(View):
         script = Scripts.objects.get(id=script_id)
         raw_script_name = f'\nprintf "\e[32mcomplited {script.name}\e[0m\n"'
 
-        raw = BASH_BEGINING + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER + BASH_END
+        body = script.text or ""
+        body = body.replace("\ufeff", "")        # BOM
+        body = body.replace("\r\n", "\n").replace("\r", "\n").lstrip("\n")
+
+        raw = BASH_BEGIN + body
+        if not raw.endswith("\n"):
+            raw += "\n"
   
         response = HttpResponse(raw.encode('utf-8'), content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=script_raw.sh'
@@ -272,14 +277,18 @@ class TemplateRaw(View):
             return render(request, 'info.html', {"info":info})
         
         template = Templates.objects.get(id=template_id) 
-        template_raw = BASH_BEGINING
+        template_raw = BASH_BEGIN
 
         for script in template.scripts.all():
+            body = script.text or ""
+            body = body.replace("\ufeff", "")        # BOM
+            body = body.replace("\r\n", "\n").replace("\r", "\n").lstrip("\n")
             raw_script_name = f'\nprintf "\e[32mcomplited {script.name}\e[0m\n"'
-            raw_script_text = "\n" + script.text + BASH_SPLITER + raw_script_name + BASH_SPLITER
+            raw_script_text = "\n" + body + BASH_SPLITER + raw_script_name + BASH_SPLITER
             template_raw = template_raw + raw_script_text
 
-        template_raw = template_raw + BASH_END
+        if not template_raw.endswith("\n"):
+            template_raw += "\n"
 
         response = HttpResponse(template_raw.encode('utf-8'), content_type='text/plain')
         response['Content-Disposition'] = 'attachment; filename=template_raw.sh'
