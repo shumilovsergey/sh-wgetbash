@@ -34,7 +34,7 @@
 Чтобы развернуть проект локально или на сервере:  
 
 1. Склонируйте репозиторий:  
-   ```bash
+   ```
    gh repo clone shumilovsergey/sh-wgetbash
    cd sh-wgetbash
    ```
