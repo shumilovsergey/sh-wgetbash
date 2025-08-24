@@ -121,17 +121,24 @@ body {
     {% else %}
     <!-- Empty State - Centered Create Button -->
     <div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
-      <form action="{% url 'api:script_create' %}" method="GET">
-        <button class="create-button" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 24px 48px; border-radius: 4px; font-size: 1.125rem; font-weight: 600; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); transition: all 0.1s ease-out;"
-                type="submit"
-                onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 rgba(0, 0, 0, 0.2)';"
-                onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';">
-          <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-          </svg>
-          Создать скрипт
-        </button>
-      </form>
+      <div style="text-align: center;">
+        <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="margin: 0 auto 24px auto; color: #cbd5e1;">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+        <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0 0 8px 0;">Пока нет скриптов</h3>
+        <p style="font-size: 0.875rem; color: #64748b; margin: 0 0 32px 0;">Создайте свой первый bash скрипт для автоматизации задач</p>
+        <form action="{% url 'api:script_create' %}" method="GET">
+          <button class="create-button" style="display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 24px 48px; border-radius: 4px; font-size: 1.125rem; font-weight: 600; cursor: pointer; border: 2px solid #2563eb; outline: none; background: #2563eb; color: white; box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15); transition: all 0.1s ease-out;"
+                  type="submit"
+                  onmouseover="this.style.background='#1d4ed8'; this.style.borderColor='#1d4ed8'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 0 rgba(0, 0, 0, 0.2)';"
+                  onmouseout="this.style.background='#2563eb'; this.style.borderColor='#2563eb'; this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';">
+            <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            Создать первый скрипт
+          </button>
+        </form>
+      </div>
     </div>
     {% endif %}
   </div>
