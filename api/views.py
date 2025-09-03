@@ -153,12 +153,12 @@ class ScriptDelete(View):   # дописать предупреждение о �
         return redirect("/script_list/")
         
 class ScriptRaw(View):
-    def get(self, request, script_id):
-        if not Scripts.objects.filter(id=script_id).exists():
+    def get(self, request, script_hash):
+        if not Scripts.objects.filter(hash=script_hash).exists():
             info = "Скрипт не найден, попробуйте еще раз"
             return render(request, 'info.html', {"info":info})
         
-        script = Scripts.objects.get(id=script_id)
+        script = Scripts.objects.get(hash=script_hash)
         raw_script_name = f'\nprintf "\e[32mcomplited {script.name}\e[0m\n"'
 
         body = script.text or ""
@@ -271,12 +271,12 @@ class TemplateDelete(View):
         return redirect("/template_list/")
     
 class TemplateRaw(View):
-    def get(self, request, template_id):
-        if not Templates.objects.filter(id=template_id).exists():
+    def get(self, request, template_hash):
+        if not Templates.objects.filter(hash=template_hash).exists():
             info = "Шаблон не найден, попробуйте еще раз"
             return render(request, 'info.html', {"info":info})
         
-        template = Templates.objects.get(id=template_id) 
+        template = Templates.objects.get(hash=template_hash) 
         template_raw = BASH_BEGIN
 
         for script in template.scripts.all():

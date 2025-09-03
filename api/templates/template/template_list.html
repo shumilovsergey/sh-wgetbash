@@ -81,7 +81,7 @@ body {
             </button>
             
             <!-- Copy Button -->
-            <button onclick="event.stopPropagation(); copyToClipboard('{{template.id}}')" 
+            <button onclick="event.stopPropagation(); copyToClipboard('{{template.hash}}')" 
                     style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
                     title="Скопировать команду"
                     onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
@@ -133,8 +133,8 @@ body {
 </div>
 
 <script>
-    function copyToClipboard(template_id) {
-        const textToCopy = "wget https://{{host_dns}}/template_raw/" + template_id + "/ -O template_" + template_id + ".sh && sed -i 's/\\r$//' template_" + template_id + ".sh && chmod +x template_" + template_id + ".sh && sh template_" + template_id + ".sh";
+    function copyToClipboard(template_hash) {
+        const textToCopy = "wget https://{{host_dns}}/template_raw/" + template_hash + "/ -O template_" + template_hash + ".sh && sed -i 's/\\r$//' template_" + template_hash + ".sh && chmod +x template_" + template_hash + ".sh && sh template_" + template_hash + ".sh";
         
         const alertBox = document.getElementById('alert');
         

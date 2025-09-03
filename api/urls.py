@@ -34,13 +34,13 @@ urlpatterns = [
     path('script_id/<int:script_id>/', ScriptId.as_view(), name='script_id'),
     path('script_delete/<int:script_id>/', ScriptDelete.as_view(), name='script_delete'),     # script_delete warning
     path('script_create/', ScriptCreate.as_view(), name='script_create'),
-    path('script_raw/<int:script_id>/', ScriptRaw.as_view(), name='script_raw'),
+    path('script_raw/<str:script_hash>/', ScriptRaw.as_view(), name='script_raw'),
     # template
     path('template_list/', TemplateList.as_view(), name='template_lis'),
     path('template_id/<int:template_id>/', TemplateId.as_view(), name='template_id'),
     path('template_edit/<int:template_id>/', TemplateId.as_view(), name='template_edit'),
     path('template_delete/<int:template_id>/', TemplateDelete.as_view(), name='template_delete'),
     path('template_create/', TemplateCreate.as_view(), name='template_create'),
-    path('template_raw/<int:template_id>/', TemplateRaw.as_view(), name='template_raw'),
+    path('template_raw/<str:template_hash>/', TemplateRaw.as_view(), name='template_raw'),
     # testing
 ]

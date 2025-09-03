@@ -11,6 +11,8 @@ RUN pip3 install -r requirements.txt
 
 COPY . /code/
 
+# Ensure sqlite directory exists
+RUN mkdir -p /code/sqlite
 
 EXPOSE 8000
 

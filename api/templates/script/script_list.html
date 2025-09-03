@@ -83,7 +83,7 @@ body {
             </button>
             
             <!-- Copy Button -->
-            <button onclick="event.stopPropagation(); copyToClipboard('{{script.id}}')" 
+            <button onclick="event.stopPropagation(); copyToClipboard('{{script.hash}}')" 
                     style="display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 4px; cursor: pointer; border: 2px solid #059669; outline: none; background: #059669; color: white; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1); transition: all 0.1s ease-out;"
                     title="Скопировать команду"
                     onmouseover="this.style.background='#047857'; this.style.borderColor='#047857'; this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 0 rgba(0, 0, 0, 0.15)';"
@@ -188,8 +188,8 @@ body {
         currentExpandedScript = scriptId;
     }
     
-    function copyToClipboard(script_id) {
-        const textToCopy = "wget https://{{request.get_host}}/script_raw/" + script_id + "/ -O script_" + script_id + ".sh && chmod +x script_" + script_id + ".sh && ./script_" + script_id + ".sh";
+    function copyToClipboard(script_hash) {
+        const textToCopy = "wget https://{{request.get_host}}/script_raw/" + script_hash + "/ -O script_" + script_hash + ".sh && sed -i 's/\\r$//' script_" + script_hash + ".sh && chmod +x script_" + script_hash + ".sh && ./script_" + script_hash + ".sh";
         
         const alertBox = document.getElementById('alert');
         

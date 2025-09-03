@@ -1,0 +1,447 @@
+# WgetBash Design System - Modern Light Angular CSS
+
+This document describes the design language and visual principles used in the WgetBash application. This design system emphasizes clarity, accessibility, and modern aesthetics while maintaining a professional and functional appearance.
+
+## Design Essence & Philosophy
+
+### The "Crisp Digital" Aesthetic
+
+This design embodies a **crisp, digital-native** aesthetic that feels like a modern developer tool or professional software interface. It's the visual equivalent of a well-organized codebase - clean, logical, and purposeful.
+
+**Mood & Atmosphere:**
+- **Authoritative yet Approachable**: Professional enough for enterprise use, friendly enough for individual developers
+- **Confident Simplicity**: Every element has a purpose; nothing is decorative for decoration's sake
+- **Digital Precision**: Sharp, pixel-perfect edges that feel native to screen interfaces
+- **Quiet Sophistication**: Elegant through restraint rather than ornamentation
+
+**Visual Personality:**
+- **Angular & Architectural**: Like modern minimalist architecture - clean lines, defined boundaries, geometric precision
+- **High-Contrast Clarity**: Information hierarchy is immediately obvious through strong contrast relationships
+- **Tactile Digitally**: Elements feel physically interactive - buttons that "press", cards that "lift", borders that define clear boundaries
+- **Light & Breathable**: Generous whitespace creates a sense of calm and focus, never cramped or cluttered
+
+**Interaction Philosophy:**
+- **Immediate Feedback**: Every interaction provides instant, clear visual response
+- **Predictable Behavior**: Consistent patterns create muscle memory and user confidence
+- **Gentle Animation**: Movements are purposeful and quick - enhancing usability, not showing off
+- **Physical Metaphors**: Elements behave like physical objects - they lift when hovered, have weight through shadows, feel solid
+
+**Content Approach:**
+- **Information First**: Design serves content, never competes with it
+- **Scannable Hierarchy**: Users can quickly identify what's important and what actions are available
+- **Progressive Disclosure**: Complexity is hidden until needed, keeping interfaces focused
+- **Contextual Guidance**: Empty states and micro-copy guide users naturally without hand-holding
+
+**The "Paper & Ink" Digital Metaphor:**
+Think of this design as the digital equivalent of high-quality paper and precise ink drawings:
+- **Pure White Paper**: Clean backgrounds provide perfect contrast for content
+- **Sharp Ink Lines**: Borders are crisp and definitive, like technical drawings
+- **Solid Shadows**: Elements cast real shadows like physical paper layers, not soft atmospheric effects
+- **Typography as Architecture**: Text layout follows strict grids and hierarchies like professional documents
+
+**Emotional Tone:**
+- **Trustworthy**: Visual consistency and clarity build user confidence
+- **Efficient**: No visual noise to slow down task completion
+- **Professional**: Appropriate for serious work environments
+- **Human**: Despite its precision, maintains warmth through thoughtful interactions and helpful guidance
+
+**When to Use This Style:**
+- Developer tools and technical interfaces
+- Professional SaaS applications
+- Documentation and knowledge management systems
+- Administrative dashboards and control panels
+- Any interface where clarity and efficiency are paramount over emotional engagement
+
+**What Makes It Distinctive:**
+- **No Soft Edges**: Everything is deliberately sharp and angular
+- **Solid, Not Atmospheric**: Shadows and effects are geometric, not naturalistic
+- **Purposeful Motion**: Animations enhance usability rather than delight
+- **Information Architecture**: Visual hierarchy mirrors logical structure
+- **Confident Minimalism**: Reduction to essentials without feeling sparse or cold
+
+## Core Design Philosophy
+
+### Light & Angular
+- **Pure Light Theme**: Clean white backgrounds with subtle gray accents
+- **Angular Design**: Sharp, crisp edges with minimal border radius (4px max)
+- **High Contrast**: Strong contrast between elements for accessibility
+- **No Blur**: All shadows are solid, no blur effects - creates sharp, defined boundaries
+
+### Visual Hierarchy
+- **Bold Typography**: Strong font weights (600-700) for headings
+- **Clear Spacing**: 8px grid system for consistent spacing
+- **Defined Boundaries**: 2px borders on all interactive elements
+- **Elevated Interactions**: Elements lift on hover with transform and shadow changes
+
+## Color Palette
+
+### Light Theme Colors
+```css
+Background Colors:
+- Primary: #ffffff (pure white)
+- Secondary: #f8fafc (very light gray)
+- Tertiary: #f1f5f9 (light gray)
+- Card: #ffffff (white cards)
+- Hover: #f1f5f9 (subtle hover state)
+
+Text Colors:
+- Primary: #0f172a (dark slate)
+- Secondary: #475569 (medium slate)
+- Muted: #64748b (light slate)
+- Light: #94a3b8 (very light slate)
+
+Accent Colors:
+- Primary: #2563eb (bright blue)
+- Secondary: #1d4ed8 (darker blue)
+- Success: #059669 (green)
+- Warning: #d97706 (orange)
+- Danger: #dc2626 (red)
+
+Border Colors:
+- Primary: #e2e8f0 (light border)
+- Secondary: #cbd5e1 (medium border)
+- Dark: #94a3b8 (darker border)
+- Accent: #2563eb (blue accent)
+```
+
+## Spacing System - 8px Grid
+
+All spacing follows an 8px grid system for perfect pixel alignment:
+
+```css
+--space-1: 8px    (1 unit)
+--space-2: 16px   (2 units)
+--space-3: 24px   (3 units)
+--space-4: 32px   (4 units)
+--space-5: 40px   (5 units)
+--space-6: 48px   (6 units)
+--space-8: 64px   (8 units)
+--space-10: 80px  (10 units)
+--space-12: 96px  (12 units)
+--space-16: 128px (16 units)
+--space-20: 160px (20 units)
+```
+
+## Typography
+
+### Font Stack
+- **Primary**: 'Inter' - Clean, modern sans-serif
+- **Monospace**: 'JetBrains Mono', 'Fira Code' - For code blocks
+- **Fallback**: System fonts for reliability
+
+### Type Scale
+- **h1**: 2.5rem, weight 700 (hero titles)
+- **h2**: 2rem, weight 700 (page titles)
+- **h3**: 1.5rem, weight 600 (section headers)
+- **h4**: 1.25rem, weight 600 (card titles)
+- **h5**: 1.125rem, weight 600 (small headers)
+- **Body**: 1rem, weight 400 (base text)
+- **Small**: 0.875rem, weight 500 (captions, labels)
+- **Tiny**: 0.75rem, weight 400 (help text)
+
+## Shadow System - No Blur, Angular Shadows
+
+All shadows are solid (no blur) creating sharp, defined edges:
+
+```css
+--shadow-xs: 0 1px 0 rgba(0, 0, 0, 0.05)   (minimal)
+--shadow-sm: 0 2px 0 rgba(0, 0, 0, 0.1)    (default)
+--shadow-md: 0 4px 0 rgba(0, 0, 0, 0.15)   (hover/focus)
+--shadow-lg: 0 8px 0 rgba(0, 0, 0, 0.2)    (elevated)
+--shadow-xl: 0 16px 0 rgba(0, 0, 0, 0.25)  (modal/popup)
+```
+
+## Component Patterns
+
+### Buttons - Angular & Elevated
+```css
+/* Primary Button Pattern */
+background: #2563eb (blue)
+border: 2px solid #2563eb
+color: white
+padding: 16px 32px (2x4 units)
+border-radius: 4px
+box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1)
+font-weight: 600
+
+/* Hover State */
+background: #1d4ed8 (darker blue)
+transform: translateY(-1px) (lift effect)
+box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15) (larger shadow)
+
+/* Large Button */
+padding: 24px 48px (3x6 units)
+font-size: 1.125rem
+font-weight: 700
+```
+
+### Cards - Clean & Bordered
+```css
+/* Card Pattern */
+background: #ffffff
+border: 2px solid #e2e8f0
+border-radius: 4px
+padding: 24px (3 units)
+box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1)
+
+/* Interactive Card Hover */
+border-color: #cbd5e1 (darker border)
+box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15)
+transform: translateY(-1px) (optional lift)
+```
+
+### Forms - Consistent & Clear
+```css
+/* Input Pattern */
+background: #ffffff
+border: 2px solid #e2e8f0
+border-radius: 4px
+padding: 16px (2 units)
+font-family: 'Inter'
+
+/* Focus State */
+border-color: #2563eb
+box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1)
+outline: none
+
+/* Textarea */
+min-height: 120px
+font-family: 'JetBrains Mono' (monospace for code)
+```
+
+### Navigation - Minimalist Header
+```css
+/* Nav Container */
+background: #ffffff
+border: 2px solid #e2e8f0
+border-radius: 4px
+padding: 16px 32px (2x4 units)
+margin: 16px (2 units)
+box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1)
+
+/* Nav Items */
+background: transparent
+border: 2px solid #e2e8f0
+padding: 8px 16px (1x2 units)
+border-radius: 4px
+font-size: 0.875rem
+font-weight: 500
+```
+
+## Icon System
+
+### Size Standards
+- **Small Icons**: 16px (nav items, inline elements)
+- **Medium Icons**: 20px (buttons, actions)
+- **Large Icons**: 24px (primary buttons)
+- **Hero Icons**: 64px (empty states, features)
+
+### Icon Usage
+- **Stroke Icons**: Use stroke-based icons for consistency
+- **2px Stroke Width**: Standard stroke width for clarity
+- **Rounded Line Caps**: `stroke-linecap="round"`
+- **Rounded Line Joins**: `stroke-linejoin="round"`
+
+## Empty States Pattern
+
+```html
+<!-- Empty State Structure -->
+<div style="display: flex; justify-content: center; align-items: center; min-height: 60vh;">
+  <div style="text-align: center;">
+    <!-- Large Icon (64px) -->
+    <svg width="64" height="64" style="margin: 0 auto 24px auto; color: #cbd5e1;">
+      <!-- Icon path -->
+    </svg>
+    
+    <!-- Heading -->
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #0f172a; margin: 0 0 8px 0;">
+      Title Text
+    </h3>
+    
+    <!-- Description -->
+    <p style="font-size: 0.875rem; color: #64748b; margin: 0 0 32px 0;">
+      Description text
+    </p>
+    
+    <!-- Call to Action Button -->
+    <button style="/* large button styles */">
+      Action Text
+    </button>
+  </div>
+</div>
+```
+
+## Layout Patterns
+
+### Perfect Centering
+```css
+/* Vertical & Horizontal Center */
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 60vh; /* or 100vh for full screen */
+```
+
+### Content Container
+```css
+/* Main Content Wrapper */
+max-width: 800px; /* or 1200px for wide content */
+margin: 0 auto;
+padding: 32px; /* 4 units */
+```
+
+### Grid System
+```css
+/* Responsive Grid */
+display: grid;
+gap: 24px; /* 3 units */
+grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+```
+
+## Interactive States
+
+### Hover Transitions
+```css
+/* Standard Transition */
+transition: all 0.1s ease-out; /* fast, snappy */
+
+/* Hover Effects */
+1. Color changes (background, border, text)
+2. Shadow increases (2px → 4px → 8px)
+3. Optional lift (translateY(-1px) or translateY(-2px))
+4. Border color darkens
+```
+
+### Focus States
+```css
+/* Accessibility Focus */
+outline: 2px solid #2563eb;
+outline-offset: 2px;
+```
+
+## Responsive Breakpoints
+
+```css
+/* Mobile First Approach */
+Base: 320px+ (mobile)
+Tablet: 768px+ (tablet)
+Desktop: 1024px+ (desktop)
+Large: 1280px+ (large desktop)
+```
+
+### Mobile Optimizations
+- Reduce spacing scale by 25% on very small screens
+- Stack navigation items vertically
+- Full-width buttons on mobile
+- Larger touch targets (minimum 44px)
+
+## Animation Principles
+
+### Timing
+- **Fast**: 0.1s ease-out (hover states)
+- **Normal**: 0.2s ease-out (state changes)
+- **Slow**: 0.3s ease-out (page transitions)
+
+### Easing
+- **Primary**: `ease-out` - natural, responsive feeling
+- **Avoid**: `ease-in`, `linear` - feels mechanical
+
+### Effects
+- **Transform**: translateY() for lifting effects
+- **Opacity**: for fade in/out
+- **Scale**: subtle (0.95-1.05) for press effects
+- **Avoid**: complex animations, bounces, springs
+
+## Accessibility Features
+
+### Contrast
+- All text meets WCAG AA standards (4.5:1 minimum)
+- High contrast mode support with forced black borders
+- Interactive elements have clear visual boundaries
+
+### Focus Management
+- Visible focus indicators on all interactive elements
+- Logical tab order
+- Skip links where appropriate
+
+### Screen Readers
+- Semantic HTML structure
+- Proper heading hierarchy (h1 → h2 → h3)
+- Alt text for images
+- ARIA labels where needed
+
+## Code Style Guidelines
+
+### CSS Organization
+1. **Variables first** - Define all custom properties
+2. **Reset/Base** - Normalize browser defaults
+3. **Layout** - Grid systems, containers
+4. **Components** - Individual component styles
+5. **Utilities** - Helper classes
+6. **Responsive** - Media queries last
+
+### Naming Conventions
+- **BEM-inspired**: `.component-element--modifier`
+- **Utility classes**: `.text-center`, `.mb-4`, `.btn-primary`
+- **State classes**: `.is-active`, `.is-loading`, `.is-hidden`
+
+### CSS Custom Properties
+- Use CSS variables for all repeated values
+- Group related properties together
+- Consistent naming: `--color-primary`, `--space-4`, `--shadow-md`
+
+## Implementation Examples
+
+### Button Component
+```css
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 32px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: 2px solid transparent;
+  transition: all 0.1s ease-out;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+}
+```
+
+### Card Component
+```css
+.card {
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: 4px;
+  padding: 24px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-out;
+}
+
+.card-interactive {
+  cursor: pointer;
+}
+
+.card-interactive:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+}
+```
+
+This design system creates a cohesive, professional, and highly usable interface that emphasizes clarity and functionality while maintaining visual appeal through its distinctive angular, light aesthetic.

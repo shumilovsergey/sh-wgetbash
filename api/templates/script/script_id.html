@@ -151,7 +151,7 @@ body {
 
 <script>
     function copyToClipboard() {
-        const textToCopy = "wget https://{{host_dns}}/script_raw/{{script.id}}/ -O script_{{script.id}}.sh && sed -i 's/\\r$//' script_{{script.id}}.sh && chmod +x script_{{script.id}}.sh && sh script_{{script.id}}.sh";
+        const textToCopy = "wget https://{{host_dns}}/script_raw/{{script.hash}}/ -O script_{{script.hash}}.sh && sed -i 's/\\r$//' script_{{script.hash}}.sh && chmod +x script_{{script.hash}}.sh && ./script_{{script.hash}}.sh";
         const btn = document.getElementById('copy-btn-main');
         
         const textarea = document.createElement('textarea');

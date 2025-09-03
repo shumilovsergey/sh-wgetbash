@@ -423,7 +423,7 @@ body {
     
     // Copy to clipboard
     function copyToClipboard() {
-        const textToCopy = "wget https://{{host_dns}}/template_raw/{{template.id}}/ -O template_{{template.id}}.sh && sed -i 's/\\r$//' template_{{template.id}}.sh && chmod +x template_{{template.id}}.sh && sh template_{{template.id}}.sh";
+        const textToCopy = "wget https://{{host_dns}}/template_raw/{{template.hash}}/ -O template_{{template.hash}}.sh && sed -i 's/\\r$//' template_{{template.hash}}.sh && chmod +x template_{{template.hash}}.sh && sh template_{{template.hash}}.sh";
         const btn = document.getElementById('copy-btn');
         const originalContent = btn.innerHTML;
         
